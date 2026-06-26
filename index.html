@@ -265,6 +265,7 @@ hr.sp{border:0;border-top:1px solid var(--line);margin:12px 0}
       <div class="card">
         <b>🤖 ผู้ให้บริการ AI</b>
         <p class="tiny t3" style="margin:5px 0 12px">เลือกได้หลายเจ้า สลับได้ตลอด · มีตัวเลือก "ฟรี" หลายตัว</p>
+        <div class="card" style="background:var(--soft);border:none;padding:10px 12px;margin:0 0 12px"><p class="tiny" style="margin:0">💡 <b>ใส่ Key หลายเจ้าได้</b> — ตัวที่เลือกไว้จะถูกใช้ก่อน ถ้า Token หมด/ใช้ไม่ได้ ระบบจะสลับไปเจ้าอื่นที่มี Key ให้อัตโนมัติ</p></div>
         <select class="fc" id="provider">
           <option value="gemini">Google Gemini — ฟรี ⭐ แนะนำ (รองรับ PDF, ใช้บนเว็บได้)</option>
           <option value="openai">Groq / OpenRouter — ฟรี (โมเดลโอเพนซอร์ส)</option>
@@ -396,7 +397,7 @@ document.querySelectorAll('.nav button').forEach(b=>{b.onclick=()=>{
 }});
 function goto(g){document.querySelector(`.nav button[data-go="${g}"]`).click()}
 $('#seeAll').onclick=()=>goto('Docs');
-$('#fab').onclick=()=>{ if(!currentKey()){toast('ตั้งค่าผู้ให้บริการก่อน');goto('Set');return} $('#file').click(); };
+$('#fab').onclick=()=>{ if(!anyKey()){toast('ตั้งค่าผู้ให้บริการก่อน');goto('Set');return} $('#file').click(); };
 $('#greet').style.cursor='pointer';$('#greet').onclick=openCompanies;$('#mgrCo').onclick=openCompanies;
 
 //==================== COMPANIES ====================
@@ -432,18 +433,31 @@ $('#saveSet').onclick=()=>{const s=DB.settings;s.provider=$('#provider').value;s
 $('#testKey').onclick=async()=>{$('#saveSet').onclick();const btn=$('#testKey');btn.textContent='กำลังทดสอบ...';try{await testProvider();toast('เชื่อมต่อสำเร็จ ✓')}catch(e){toast('ผิดพลาด: '+e.message)}btn.textContent='ทดสอบการเชื่อมต่อ'};
 
 //==================== AI PROVIDERS ====================
-const EXTRACT_PROMPT=`คุณเป็นผู้ช่วยบัญชี อ่านใบเสร็จ/ใบกำกับภาษีนี้แล้วดึงข้อมูลเป็น JSON เท่านั้น (ไม่มีข้อความอื่น) ตามรูปแบบ:
-{"vendor":"ชื่อร้าน/บริษัทผู้ขายแบบเต็ม รวมคำนำหน้าและคำต่อท้าย เช่น บริษัท ... จำกัด (มหาชน) / ห้างหุ้นส่วนจำกัด ... อย่าย่อ","taxId":"เลขผู้เสียภาษี13หลักหรือ''","invoiceNumber":"เลขที่เอกสารหรือ''","date":"YYYY-MM-DD แปลงพ.ศ.เป็นค.ศ.ลบ543","subtotal":ยอดก่อนภาษีตัวเลข,"vat":VATตัวเลข,"total":ยอดรวมตัวเลข,"category":"หนึ่งใน: ${CATS.map(c=>c.k).join('|')}","lineItems":[{"name":"ชื่อ","qty":จำนวน,"amount":ยอด}],"confidence":0ถึง1,"note":"สิ่งที่ไม่แน่ใจภาษาไทยสั้นๆ"}
-กฎ: แปลงปีพ.ศ.เป็นค.ศ.เสมอ, ตัวเลขไม่มีคอมม่า, จัดหมวดให้เหมาะกับเนื้อหา`;
+const EXTRACT_PROMPT=`อ่านใบเสร็จ/ใบกำกับภาษี ตอบ JSON อย่างเดียว ห้ามมีข้อความอื่น:
+{"vendor":"ชื่อผู้ขายเต็ม(รวม บริษัท..จำกัด/มหาชน/หจก. ห้ามย่อ)","taxId":"เลขภาษี13หลัก|''","invoiceNumber":"เลขที่เอกสาร|''","date":"YYYY-MM-DD(พ.ศ.ลบ543)","subtotal":ก่อนภาษี,"vat":ภาษี,"total":รวม,"category":"${CATS.map(c=>c.k).join('|')}","lineItems":[{"name":"","qty":0,"amount":0}],"confidence":0-1,"note":"ข้อสงสัยสั้นๆ"}
+ตัวเลขไม่มีคอมม่า จัดหมวดตามเนื้อหา`;
 function b64FromDataUrl(u){return u.split(',')[1]}
 function parseJSON(t){if(!t)throw new Error('ไม่มีข้อมูลตอบกลับ');try{return JSON.parse(t)}catch(e){}const m=t.match(/\{[\s\S]*\}/);if(m){try{return JSON.parse(m[0])}catch(e){}}throw new Error('แปลงข้อมูลไม่ได้')}
 function normalize(p){const o={vendor:p.vendor||'',taxId:p.taxId||'',invoiceNumber:p.invoiceNumber||'',date:(p.date||'').slice(0,10),subtotal:+p.subtotal||0,vat:+p.vat||0,total:+p.total||0,category:CATS.some(c=>c.k===p.category)?p.category:'other',lineItems:Array.isArray(p.lineItems)?p.lineItems:[],confidence:p.confidence,note:p.note||''};if(!o.total&&o.subtotal)o.total=o.subtotal+o.vat;o.type=o.category==='income'?'income':'expense';o.month=(o.date||'').slice(0,7)||new Date().toISOString().slice(0,7);return o}
-async function aiExtract(pg,signal){const p=DB.settings.provider,b64=b64FromDataUrl(pg.dataUrl),mime=pg.mime,isPdf=!!pg.isPdf;let raw;
+function provLabel(p){return{gemini:'Gemini',claude:'Claude',openai:DB.settings.oai.preset==='groq'?'Groq':DB.settings.oai.preset==='openrouter'?'OpenRouter':'Custom',iapp:'iApp'}[p]||p}
+function providerHasKey(p){return!!{gemini:DB.settings.keys.gemini,claude:DB.settings.keys.claude,openai:DB.settings.keys.openai,iapp:DB.settings.keys.iapp}[p]}
+function anyKey(){return['gemini','claude','openai','iapp'].some(providerHasKey)}
+async function callProvider(p,b64,mime,isPdf,pg,signal){let raw;
  if(p==='gemini')raw=await geminiExtract(b64,mime,signal);
  else if(p==='claude')raw=await claudeExtract(b64,mime,isPdf,signal);
  else if(p==='openai')raw=await openaiExtract(b64,mime,signal);
  else if(p==='iapp')return await iappExtract(dataUrlToBlob(pg.dataUrl),signal);
  return normalize(raw)}
+// ลองผู้ให้บริการที่ตั้งไว้ก่อน ถ้า token หมด/error → สลับไปตัวอื่นที่มี Key อัตโนมัติ
+async function aiExtract(pg,signal){const b64=b64FromDataUrl(pg.dataUrl),mime=pg.mime,isPdf=!!pg.isPdf;
+ const order=[DB.settings.provider,...['gemini','claude','openai','iapp'].filter(p=>p!==DB.settings.provider)].filter(providerHasKey);
+ if(!order.length)throw new Error('ยังไม่ได้ใส่ API Key ของผู้ให้บริการใด');
+ let lastErr;
+ for(let i=0;i<order.length;i++){const p=order[i];
+  try{const data=await callProvider(p,b64,mime,isPdf,pg,signal);if(i>0)data.note=((data.note?data.note+' · ':'')+'อ่านด้วย '+provLabel(p)+' (สำรอง)').trim();return data}
+  catch(err){if(err.name==='AbortError')throw err;lastErr=err;if(i<order.length-1)toast(provLabel(p)+' ใช้ไม่ได้ → ลอง '+provLabel(order[i+1]));}
+ }
+ throw lastErr||new Error('อ่านไม่สำเร็จทุกผู้ให้บริการ')}
 async function geminiExtract(b64,mime,signal){const k=DB.settings.keys.gemini;if(!k)throw new Error('ยังไม่ใส่ Gemini API Key');const url=`https://generativelanguage.googleapis.com/v1beta/models/${DB.settings.models.gemini}:generateContent?key=${encodeURIComponent(k)}`;const r=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},signal,body:JSON.stringify({contents:[{parts:[{inline_data:{mime_type:mime,data:b64}},{text:EXTRACT_PROMPT}]}],generationConfig:{temperature:0,responseMimeType:'application/json'}})});const j=await r.json();if(!r.ok)throw new Error(j.error?.message||('HTTP '+r.status));return parseJSON((j.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join(''))}
 function claudeHeaders(){return{'content-type':'application/json','x-api-key':DB.settings.keys.claude,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}}
 async function claudeExtract(b64,mime,isPdf,signal){if(!DB.settings.keys.claude)throw new Error('ยังไม่ใส่ Claude API Key');const block=isPdf?{type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}}:{type:'image',source:{type:'base64',media_type:mime,data:b64}};const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:claudeHeaders(),signal,body:JSON.stringify({model:DB.settings.models.claude,max_tokens:1500,messages:[{role:'user',content:[block,{type:'text',text:EXTRACT_PROMPT}]}]})});const j=await r.json();if(!r.ok)throw new Error(j.error?.message||('HTTP '+r.status));return parseJSON((j.content||[]).filter(b=>b.type==='text').map(b=>b.text).join(''))}
@@ -463,7 +477,9 @@ $('#file').onchange=e=>{const fs=[...e.target.files];e.target.value='';fs.forEac
 function fileToData(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
 function dataUrlToBlob(u){const[meta,b64]=u.split(',');const mime=(meta.match(/:(.*?);/)||[])[1]||'image/jpeg';const bin=atob(b64);const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:mime})}
 function loadPDFJS(){return new Promise((res,rej)=>{if(window.pdfjsLib)return res();const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';s.onload=()=>{try{pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'}catch(e){}res()};s.onerror=rej;document.head.appendChild(s)})}
-async function pdfToImages(file){await loadPDFJS();const buf=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:buf}).promise;const out=[];const n=Math.min(pdf.numPages,20);for(let i=1;i<=n;i++){const page=await pdf.getPage(i);const vp=page.getViewport({scale:2});const cv=document.createElement('canvas');cv.width=vp.width;cv.height=vp.height;await page.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise;out.push(cv.toDataURL('image/jpeg',0.85))}return out}
+async function pdfToImages(file){await loadPDFJS();const buf=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:buf}).promise;const out=[];const n=Math.min(pdf.numPages,20);for(let i=1;i<=n;i++){const page=await pdf.getPage(i);const base=page.getViewport({scale:1});const scale=Math.min(2,1600/Math.max(base.width,base.height));const vp=page.getViewport({scale});const cv=document.createElement('canvas');cv.width=vp.width;cv.height=vp.height;await page.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise;out.push(cv.toDataURL('image/jpeg',0.8))}return out}
+// ย่อรูปให้ด้านยาวสุดไม่เกิน 1600px เพื่อประหยัด token (ใบเสร็จยังอ่านชัด)
+function shrinkImage(dataUrl){return new Promise(res=>{const img=new Image();img.onload=()=>{const mx=Math.max(img.width,img.height);if(mx<=1600)return res(dataUrl);const s=1600/mx,cv=document.createElement('canvas');cv.width=Math.round(img.width*s);cv.height=Math.round(img.height*s);cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);res(cv.toDataURL('image/jpeg',0.8))};img.onerror=()=>res(dataUrl);img.src=dataUrl})}
 
 const reading={};
 function rerender(){renderDocs();if($('#pgHome').classList.contains('on'))renderHome()}
@@ -475,14 +491,14 @@ async function readOnePage(pg,suffix){
  catch(err){if(err.name==='AbortError'){CO().records=CO().records.filter(x=>x.id!==rec.id)}else{rec.status='error';rec.error=err.message;toast('อ่านไม่สำเร็จ: '+err.message)}}
  delete reading[rec.id];save();rerender();refreshBadge()}
 async function handleFile(file){
- if(!currentKey()){toast('เลือกผู้ให้บริการ + ใส่ Key ก่อน');goto('Set');return}
+ if(!anyKey()){toast('เลือกผู้ให้บริการ + ใส่ Key ก่อน');goto('Set');return}
  if(file.type==='application/pdf'){
    let imgs=null;try{imgs=await pdfToImages(file)}catch(e){imgs=null}
    if(imgs&&imgs.length){for(let i=0;i<imgs.length;i++){await readOnePage({dataUrl:imgs[i],mime:'image/jpeg'},imgs.length>1?`(หน้า ${i+1}/${imgs.length})`:'')}return}
-   if(DB.settings.provider==='gemini'||DB.settings.provider==='claude'){const du=await fileToData(file);await readOnePage({dataUrl:du,mime:'application/pdf',isPdf:true},'');return}
-   toast('อ่าน PDF ในบริการนี้ไม่ได้ — สลับไป Gemini');return;
+   if(providerHasKey('gemini')||providerHasKey('claude')){const du=await fileToData(file);await readOnePage({dataUrl:du,mime:'application/pdf',isPdf:true},'');return}
+   toast('อ่าน PDF ไม่ได้ — ใส่ Key Gemini หรือ Claude เพิ่ม');return;
  }
- const du=await fileToData(file);await readOnePage({dataUrl:du,mime:file.type||'image/jpeg'},'');
+ const du=await shrinkImage(await fileToData(file));await readOnePage({dataUrl:du,mime:'image/jpeg'},'');
 }
 
 //==================== HELPERS ====================
