@@ -5,848 +5,559 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>บัญชี AI — ผู้ช่วยงานบัญชี</title>
 
-<!-- PWA -->
 <meta name="application-name" content="บัญชี AI">
 <meta name="description" content="ตั้งระบบครั้งเดียว ให้ AI อ่านใบเสร็จ จัดหมวด สรุปงบ ตรวจเอกสาร และส่งออก Excel">
 <meta name="theme-color" content="#e8503a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="บัญชี AI">
-<link rel="manifest" href="data:application/manifest+json,{%22name%22:%22%E0%B8%9A%E0%B8%B1%E0%B8%8D%E0%B8%8A%E0%B8%B5%20AI%22,%22short_name%22:%22%E0%B8%9A%E0%B8%B1%E0%B8%8D%E0%B8%8A%E0%B8%B5%20AI%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23faf6f0%22,%22theme_color%22:%22%23e8503a%22,%22orientation%22:%22portrait%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20512%20512'%3E%3Crect%20width='512'%20height='512'%20rx='96'%20fill='%23e8503a'/%3E%3Ccircle%20cx='256'%20cy='256'%20r='150'%20fill='%23fff'/%3E%3Ccircle%20cx='210'%20cy='235'%20r='26'%20fill='%23e8503a'/%3E%3Ccircle%20cx='302'%20cy='235'%20r='26'%20fill='%23e8503a'/%3E%3C/svg%3E%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22,%22purpose%22:%22any%20maskable%22}]}">
+<link rel="manifest" href="data:application/manifest+json,{%22name%22:%22%E0%B8%9A%E0%B8%B1%E0%B8%8D%E0%B8%8A%E0%B8%B5%20AI%22,%22short_name%22:%22%E0%B8%9A%E0%B8%B1%E0%B8%8D%E0%B8%8A%E0%B8%B5%20AI%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23faf6f0%22,%22theme_color%22:%22%23e8503a%22,%22orientation%22:%22portrait%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20512%20512'%3E%3Crect%20width='512'%20height='512'%20rx='112'%20fill='%23e8503a'/%3E%3Ccircle%20cx='256'%20cy='262'%20r='148'%20fill='%23fff'/%3E%3Ccircle%20cx='212'%20cy='244'%20r='25'%20fill='%23e8503a'/%3E%3Ccircle%20cx='300'%20cy='244'%20r='25'%20fill='%23e8503a'/%3E%3Crect%20x='246'%20y='86'%20width='20'%20height='40'%20rx='10'%20fill='%23fff'/%3E%3Ccircle%20cx='256'%20cy='74'%20r='16'%20fill='%23fff'/%3E%3C/svg%3E%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22,%22purpose%22:%22any%20maskable%22}]}">
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#faf6f0;--card:#ffffff;--soft:#f4ede3;--line:#ece2d4;
-  --ink:#2b2b33;--ink2:#6b6357;--ink3:#9a9183;
-  --brand:#e8503a;--brand2:#f3a712;--green:#2fb380;--blue:#3d8bf2;--purple:#7c5cf0;
-  --red:#e8503a;--amber:#f3a712;--shadow:0 2px 12px rgba(60,40,20,.06);
+  --bg:#f7f2ea;--card:#ffffff;--soft:#f3ece1;--soft2:#efe6d8;--line:#ece2d4;
+  --ink:#241f29;--ink2:#6b6357;--ink3:#a39a8c;
+  --brand:#e8503a;--brand2:#ff7a45;--green:#1fae73;--blue:#3d8bf2;--purple:#7c5cf0;--pink:#e85aa0;
+  --red:#e8503a;--amber:#f3a712;
+  --grad:linear-gradient(135deg,#ff7a45 0%,#e8503a 60%,#d83f6a 120%);
+  --shadow:0 4px 16px rgba(80,50,25,.07);--shadow2:0 8px 28px rgba(80,50,25,.12);
+  --r:18px;
 }
 body.dark{
-  --bg:#15171c;--card:#1e2128;--soft:#262a33;--line:#2f343f;
-  --ink:#e7e7ea;--ink2:#a8adba;--ink3:#6f7585;--shadow:0 2px 14px rgba(0,0,0,.35);
+  --bg:#13151a;--card:#1d2027;--soft:#262a33;--soft2:#2c313c;--line:#2f343f;
+  --ink:#eceef3;--ink2:#a8adba;--ink3:#71778a;
+  --shadow:0 4px 18px rgba(0,0,0,.4);--shadow2:0 10px 30px rgba(0,0,0,.5);
 }
-body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.5;transition:background .2s}
-.app{max-width:520px;margin:0 auto;padding-bottom:78px;min-height:100vh;position:relative}
-::-webkit-scrollbar{width:0}
-button{font-family:inherit;cursor:pointer;border:none;background:none}
+body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.5;transition:background .25s}
+.app{max-width:520px;margin:0 auto;padding-bottom:90px;min-height:100vh;position:relative;overflow-x:hidden}
+::-webkit-scrollbar{width:0;height:0}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:inherit;font-size:15px}
+.muted{color:var(--ink2)}.tiny{font-size:12px}.t3{color:var(--ink3)}.b{font-weight:700}
 
-.hd{position:sticky;top:0;z-index:30;background:linear-gradient(135deg,#e8503a,#f3702c);color:#fff;padding:calc(env(safe-area-inset-top) + 16px) 18px 16px;border-radius:0 0 22px 22px;box-shadow:0 4px 18px rgba(232,80,58,.25)}
-.hd h1{font-size:19px;font-weight:800;display:flex;align-items:center;gap:9px}
-.hd .bot{width:30px;height:30px;background:#fff;border-radius:50%;position:relative;flex:0 0 auto}
-.hd .bot::before,.hd .bot::after{content:'';position:absolute;top:11px;width:6px;height:6px;background:var(--brand);border-radius:50%}
-.hd .bot::before{left:8px}.hd .bot::after{right:8px}
-.hd p{font-size:12.5px;opacity:.92;margin-top:3px}
-
-.page{display:none;padding:16px 16px 0;animation:fade .25s}
+/* page */
+.page{display:none;animation:fade .28s ease}
 .page.on{display:block}
-@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-h2.sec{font-size:16px;font-weight:700;margin:4px 2px 12px;display:flex;align-items:center;gap:7px}
-.muted{color:var(--ink2)}.tiny{font-size:12px}.t3{color:var(--ink3)}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.pad{padding:0 16px}
+h2.sec{font-size:17px;font-weight:800;margin:18px 2px 12px;display:flex;align-items:center;gap:8px}
 
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:var(--shadow);margin-bottom:12px}
-.row{display:flex;align-items:center;gap:10px}
-.between{justify-content:space-between}
-.grow{flex:1;min-width:0}
-.pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--soft);color:var(--ink2)}
+/* top app bar (compact, on sub-pages) */
+.bar{position:sticky;top:0;z-index:30;background:var(--grad);color:#fff;padding:calc(env(safe-area-inset-top) + 15px) 18px 15px;border-radius:0 0 24px 24px;box-shadow:0 6px 22px rgba(232,80,58,.28)}
+.bar h1{font-size:18px;font-weight:800;display:flex;align-items:center;gap:9px}
+.bar p{font-size:12px;opacity:.92;margin-top:2px}
+.mascot{width:34px;height:34px;background:#fff;border-radius:50%;position:relative;flex:0 0 auto;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.mascot::before,.mascot::after{content:'';position:absolute;top:13px;width:6px;height:6px;background:var(--brand);border-radius:50%}
+.mascot::before{left:9px}.mascot::after{right:9px}
+.mascot i{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:3px;height:7px;background:#fff;border-radius:2px}
+.mascot i::after{content:'';position:absolute;top:-5px;left:-2px;width:7px;height:7px;background:#fff;border-radius:50%}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 16px;border-radius:13px;font-weight:700;font-size:15px;background:var(--brand);color:#fff;width:100%;transition:transform .1s,filter .15s}
+/* hero (home) */
+.hero{margin:14px 16px 0;background:var(--grad);border-radius:24px;padding:20px;color:#fff;box-shadow:var(--shadow2);position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:rgba(255,255,255,.12);border-radius:50%}
+.hero::before{content:'';position:absolute;right:30px;bottom:-50px;width:110px;height:110px;background:rgba(255,255,255,.08);border-radius:50%}
+.hero .lab{font-size:12.5px;opacity:.92;position:relative;z-index:1}
+.hero .amt{font-size:34px;font-weight:900;margin-top:3px;position:relative;z-index:1;letter-spacing:-.5px}
+.hero .delta{font-size:12.5px;margin-top:6px;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.18);padding:3px 10px;border-radius:20px;position:relative;z-index:1}
+.hero .spark{display:flex;gap:4px;align-items:flex-end;height:34px;margin-top:14px;position:relative;z-index:1}
+.hero .spark i{flex:1;background:rgba(255,255,255,.45);border-radius:3px;min-height:4px}
+.hero .spark i.cur{background:#fff}
+
+/* quick actions */
+.qa{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 16px 0}
+.qa button{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:var(--shadow);font-size:12px;font-weight:600;transition:transform .1s}
+.qa button:active{transform:scale(.96)}
+.qa .ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#fff}
+
+/* chips */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 16px;margin-top:4px}
+.chip{flex:0 0 auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:9px 13px;box-shadow:var(--shadow);display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600}
+.chip .d{width:9px;height:9px;border-radius:50%}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:15px;box-shadow:var(--shadow);margin-bottom:12px}
+.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.grow{flex:1;min-width:0}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--soft);color:var(--ink2)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:13px 16px;border-radius:14px;font-weight:700;font-size:15px;background:var(--grad);color:#fff;width:100%;transition:transform .1s,filter .15s;box-shadow:0 4px 14px rgba(232,80,58,.25)}
 .btn:active{transform:scale(.98)}
-.btn:disabled{filter:grayscale(.4);opacity:.55}
-.btn.ghost{background:var(--soft);color:var(--ink)}
-.btn.line{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
-.btn.sm{padding:8px 12px;font-size:13px;width:auto;border-radius:10px}
-.btn.green{background:var(--green)}.btn.blue{background:var(--blue)}
+.btn:disabled{filter:grayscale(.4);opacity:.55;box-shadow:none}
+.btn.ghost{background:var(--soft);color:var(--ink);box-shadow:none}
+.btn.line{background:transparent;border:1.5px solid var(--line);color:var(--ink);box-shadow:none}
+.btn.sm{padding:9px 13px;font-size:13px;width:auto;border-radius:11px;box-shadow:none}
+.btn.green{background:var(--green);box-shadow:0 4px 14px rgba(31,174,115,.25)}
 
 label.fl{display:block;font-size:12.5px;font-weight:600;color:var(--ink2);margin:0 0 5px 2px}
-.fc{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:11px;padding:11px 12px;color:var(--ink);outline:none;transition:border-color .15s}
+.fc{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:11px 13px;color:var(--ink);outline:none;transition:border-color .15s}
 .fc:focus{border-color:var(--brand)}
 textarea.fc{resize:vertical;min-height:54px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:13px;padding:0 12px;margin:0 16px 12px}
+.search input{border:0;background:none;outline:none;padding:11px 0;flex:1;color:var(--ink)}
 
-.drop{border:2px dashed #e3b9ac;border-radius:18px;background:linear-gradient(180deg,var(--card),var(--soft));padding:26px 16px;text-align:center;cursor:pointer;transition:.15s}
+.drop{border:2px dashed #e6bcae;border-radius:20px;background:linear-gradient(180deg,var(--card),var(--soft));padding:24px 16px;text-align:center;cursor:pointer;transition:.15s;margin:0 16px 6px}
+body.dark .drop{border-color:#46372f}
 .drop:active{transform:scale(.99);border-color:var(--brand)}
-.drop .ic{font-size:38px}
-.drop b{display:block;font-size:15px;margin-top:6px}
-.drop span{font-size:12.5px;color:var(--ink2)}
+.drop .ic{font-size:36px}.drop b{display:block;font-size:15px;margin-top:6px}.drop span{font-size:12.5px;color:var(--ink2)}
 
-.steps{display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;margin:0 -2px}
-.step{flex:0 0 auto;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:9px 11px;min-width:118px;box-shadow:var(--shadow)}
-.step .n{font-size:10.5px;font-weight:700;color:#fff;background:var(--brand);border-radius:6px;padding:1px 7px;display:inline-block}
-.step b{display:block;font-size:12.5px;margin-top:5px;line-height:1.35}
-.step.b2 .n{background:var(--green)}.step.b3 .n{background:var(--blue)}
-.step.b4 .n{background:var(--amber)}.step.b5 .n{background:var(--purple)}.step.b6 .n{background:#e85aa0}
+.steps{display:flex;gap:8px;overflow-x:auto;padding:2px 16px 4px}
+.step{flex:0 0 auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;min-width:122px;box-shadow:var(--shadow)}
+.step .n{font-size:10.5px;font-weight:800;color:#fff;background:var(--brand);border-radius:7px;padding:2px 8px;display:inline-block}
+.step b{display:block;font-size:12.5px;margin-top:6px;line-height:1.35}
+.step.b2 .n{background:var(--green)}.step.b3 .n{background:var(--blue)}.step.b4 .n{background:var(--amber)}.step.b5 .n{background:var(--purple)}.step.b6 .n{background:var(--pink)}
 
-.rec{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px;box-shadow:var(--shadow);margin-bottom:10px}
-.rec .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.rec .vend{font-weight:700;font-size:15px}
+.rec{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;box-shadow:var(--shadow);margin-bottom:10px;transition:transform .08s}
+.rec:active{transform:scale(.99)}
+.rec .vend{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rec .amt{font-weight:800;font-size:16px;white-space:nowrap}
 .rec .meta{font-size:12px;color:var(--ink2);margin-top:2px}
-.cat-tag{font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:18px;color:#fff;display:inline-block}
-.flag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:14px}
-.flag.dup{background:#fde8e4;color:var(--red)}
-.flag.miss{background:#fff3d6;color:#b9820a}
-.tin{color:var(--green);font-weight:700}.tout{color:var(--ink2)}
+.cat-tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:18px;color:#fff;display:inline-block}
+.flag{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:14px}
+.flag.dup{background:#fde8e4;color:var(--red)}.flag.miss{background:#fff3d6;color:#b9820a}
+.tin{color:var(--green)}
+.thumb{width:48px;height:48px;border-radius:12px;object-fit:cover;flex:0 0 auto;background:var(--soft);display:flex;align-items:center;justify-content:center}
 
-.bar{height:9px;border-radius:6px;background:var(--soft);overflow:hidden;margin-top:5px}
-.bar i{display:block;height:100%;border-radius:6px}
+.bar9{height:9px;border-radius:6px;background:var(--soft);overflow:hidden;margin-top:6px}
+.bar9 i{display:block;height:100%;border-radius:6px}
 .kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.kpi .b{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px;box-shadow:var(--shadow)}
-.kpi .b .lab{font-size:12px;color:var(--ink2)}
-.kpi .b .v{font-size:20px;font-weight:800;margin-top:3px}
+.kpi .b2{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+.kpi .b2 .lab{font-size:12px;color:var(--ink2)}.kpi .b2 .v{font-size:21px;font-weight:800;margin-top:3px}
 
-.trend{display:flex;gap:7px;align-items:flex-end;height:120px;margin-top:14px}
-.tcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:flex-end;min-width:0}
-.tbar{width:72%;background:linear-gradient(180deg,#f3702c,#e8503a);border-radius:6px 6px 0 0;min-height:4px;transition:height .3s}
+.trend{display:flex;gap:7px;align-items:flex-end;height:130px;margin-top:14px}
+.tcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;justify-content:flex-end;min-width:0}
+.tbar{width:74%;background:var(--grad);border-radius:7px 7px 0 0;min-height:5px;transition:height .35s}
 
-.nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;background:color-mix(in srgb,var(--card) 96%,transparent);backdrop-filter:blur(8px);border-top:1px solid var(--line);display:flex;padding:7px 4px calc(env(safe-area-inset-bottom) + 7px);z-index:40}
-.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink3);font-size:10.5px;font-weight:600;padding:3px 0;position:relative}
-.nav button .i{font-size:21px;line-height:1}
-.nav button.on{color:var(--brand)}
-.nav .badge{position:absolute;top:0;right:24%;background:var(--red);color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+/* nav */
+.nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;padding:8px 6px calc(env(safe-area-inset-bottom) + 8px);z-index:40}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink3);font-size:10.5px;font-weight:700;padding:3px 0;position:relative;transition:color .15s}
+.nav button .i{font-size:21px;line-height:1;transition:transform .15s}
+.nav button.on{color:var(--brand)}.nav button.on .i{transform:translateY(-1px) scale(1.08)}
+.nav .badge{position:absolute;top:-1px;right:22%;background:var(--red);color:#fff;font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--card)}
 
-.mask{position:fixed;inset:0;background:rgba(30,20,10,.5);z-index:60;display:none;align-items:flex-end;justify-content:center}
+/* FAB */
+.fab{position:fixed;right:max(16px,calc(50% - 244px));bottom:calc(env(safe-area-inset-bottom) + 78px);width:56px;height:56px;border-radius:18px;background:var(--grad);color:#fff;font-size:25px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(232,80,58,.4);z-index:45;transition:transform .12s}
+.fab:active{transform:scale(.92)}
+
+.mask{position:fixed;inset:0;background:rgba(25,15,8,.5);z-index:60;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}
 .mask.on{display:flex}
-.sheet{background:var(--bg);width:100%;max-width:520px;border-radius:22px 22px 0 0;max-height:92vh;overflow-y:auto;padding:18px 16px calc(env(safe-area-inset-bottom) + 18px);animation:up .25s}
+.sheet{background:var(--bg);width:100%;max-width:520px;border-radius:24px 24px 0 0;max-height:92vh;overflow-y:auto;padding:18px 16px calc(env(safe-area-inset-bottom) + 18px);animation:up .28s cubic-bezier(.2,.8,.2,1)}
 @keyframes up{from{transform:translateY(100%)}to{transform:none}}
-.sheet h3{font-size:17px;font-weight:800;margin-bottom:4px}
+.sheet h3{font-size:18px;font-weight:800;margin-bottom:4px}
 .grab{width:42px;height:4px;background:var(--line);border-radius:3px;margin:0 auto 14px}
 
-.empty{text-align:center;padding:40px 20px;color:var(--ink3)}
-.empty .ic{font-size:46px}
-.empty p{margin-top:8px;font-size:13px}
+.empty{text-align:center;padding:42px 20px;color:var(--ink3)}
+.empty .ic{font-size:48px}.empty p{margin-top:8px;font-size:13px}
 
-.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:#2b2b33;color:#fff;padding:11px 18px;border-radius:30px;font-size:13.5px;font-weight:600;z-index:80;opacity:0;transition:opacity .2s;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:90%}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#241f29;color:#fff;padding:11px 18px;border-radius:30px;font-size:13.5px;font-weight:600;z-index:80;opacity:0;transition:opacity .2s;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.3);max-width:90%}
 .toast.on{opacity:1}
-
 .spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
 @keyframes sp{to{transform:rotate(360deg)}}
-.banner{background:#fff3d6;border:1px solid #f3d089;border-radius:13px;padding:11px 13px;font-size:12.5px;color:#8a6212;margin-bottom:12px}
+.banner{background:#fff3d6;border:1px solid #f3d089;border-radius:14px;padding:11px 13px;font-size:12.5px;color:#8a6212;margin:0 16px 12px}
 .banner b{color:#6e4d0a}
-.thumb{width:48px;height:48px;border-radius:10px;object-fit:cover;flex:0 0 auto;background:var(--soft)}
+body.dark .banner{background:#332b16;border-color:#5a4a1e;color:#e8c878}
 hr.sp{border:0;border-top:1px solid var(--line);margin:12px 0}
-.ins{display:flex;gap:9px;padding:10px;border-radius:12px;background:var(--soft);margin-bottom:8px;font-size:13px}
+.ins{display:flex;gap:9px;padding:11px;border-radius:13px;background:var(--soft);margin-bottom:8px;font-size:13px}
 .ins .ic{font-size:18px;flex:0 0 auto}
 
-.tog{display:flex;align-items:center;justify-content:space-between;padding:11px 2px;border-bottom:1px solid var(--line)}
+.tog{display:flex;align-items:center;justify-content:space-between;padding:12px 2px;border-bottom:1px solid var(--line)}
 .tog:last-child{border-bottom:0}
 .tog .lab b{font-size:14px}.tog .lab span{display:block;font-size:11.5px;color:var(--ink3)}
-.sw{width:46px;height:27px;border-radius:14px;background:var(--line);position:relative;flex:0 0 auto;transition:background .2s;cursor:pointer}
-.sw::after{content:'';position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.sw.on{background:var(--green)}.sw.on::after{left:22px}
-.seg{display:flex;background:var(--soft);border-radius:11px;padding:3px;gap:3px}
-.seg button{flex:1;padding:9px;border-radius:9px;font-size:13px;font-weight:600;color:var(--ink2)}
+.sw{width:48px;height:28px;border-radius:15px;background:var(--line);position:relative;flex:0 0 auto;transition:background .2s;cursor:pointer}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw.on{background:var(--green)}.sw.on::after{left:23px}
+.seg{display:flex;background:var(--soft);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;padding:9px;border-radius:10px;font-size:13px;font-weight:700;color:var(--ink2)}
 .seg button.on{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
 
-/* lock */
 .lock{position:fixed;inset:0;background:var(--bg);z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;padding:30px}
 .lock.on{display:flex}
-.lock .botbig{width:64px;height:64px;background:var(--brand);border-radius:50%;position:relative;margin-bottom:18px}
-.lock .botbig::before,.lock .botbig::after{content:'';position:absolute;top:24px;width:11px;height:11px;background:#fff;border-radius:50%}
-.lock .botbig::before{left:16px}.lock .botbig::after{right:16px}
+.lock .bb{width:66px;height:66px;background:var(--grad);border-radius:50%;position:relative;margin-bottom:18px;box-shadow:0 8px 22px rgba(232,80,58,.35)}
+.lock .bb::before,.lock .bb::after{content:'';position:absolute;top:26px;width:11px;height:11px;background:#fff;border-radius:50%}
+.lock .bb::before{left:17px}.lock .bb::after{right:17px}
 .pinDots{display:flex;gap:14px;margin:16px 0 22px}
 .pinDots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink3)}
 .pinDots i.f{background:var(--brand);border-color:var(--brand)}
-.pad{display:grid;grid-template-columns:repeat(3,72px);gap:14px}
-.pad button{height:72px;border-radius:50%;background:var(--card);border:1px solid var(--line);font-size:24px;font-weight:600;color:var(--ink)}
-.pad button:active{background:var(--soft)}
+.kpad{display:grid;grid-template-columns:repeat(3,74px);gap:14px}
+.kpad button{height:74px;border-radius:50%;background:var(--card);border:1px solid var(--line);font-size:25px;font-weight:600}
+.kpad button:active{background:var(--soft)}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="hd">
-    <h1><span class="bot"></span> บัญชี AI</h1>
-    <p id="hdSub">ให้ AI อ่านใบเสร็จ จัดหมวด และสรุปงบให้คุณ</p>
+
+  <!-- ===== HOME ===== -->
+  <div class="page on" id="pgHome">
+    <div class="bar">
+      <h1><span class="mascot"><i></i></span> <span id="greet">บัญชี AI</span></h1>
+      <p id="hdSub">ผู้ช่วยอ่านใบเสร็จและสรุปงบของคุณ</p>
+    </div>
+    <div id="noKey" class="banner" style="display:none;margin-top:12px">
+      ⚙️ ยังไม่ได้ตั้งค่า <b>ผู้ให้บริการ AI</b> — แตะ "ตั้งค่า" เลือกบริการฟรีและใส่ API Key
+    </div>
+    <div class="hero">
+      <div class="lab" id="heroLab">รายจ่ายเดือนนี้</div>
+      <div class="amt" id="heroAmt">฿0</div>
+      <span class="delta" id="heroDelta"></span>
+      <div class="spark" id="heroSpark"></div>
+    </div>
+    <div class="qa">
+      <button id="qaUpload"><span class="ic" style="background:var(--grad)">📸</span>สแกนใบเสร็จ</button>
+      <button id="qaSum"><span class="ic" style="background:var(--blue)">📊</span>ดูสรุป</button>
+      <button id="qaXls"><span class="ic" style="background:var(--green)">⬇</span>Excel</button>
+    </div>
+    <h2 class="sec pad" style="margin-bottom:8px">หมวดเดือนนี้</h2>
+    <div class="chips" id="homeChips"></div>
+    <div class="row between pad" style="margin:18px 0 8px"><h2 class="sec" style="margin:0">เอกสารล่าสุด</h2><button class="btn line sm" id="seeAll">ดูทั้งหมด</button></div>
+    <div class="pad" id="homeRecent"></div>
   </div>
 
   <!-- ===== เอกสาร ===== -->
-  <div class="page on" id="pgDocs">
-    <div class="steps">
-      <div class="step b1"><span class="n">ขั้น 1</span><b>ดึง/อัปโหลด เอกสาร</b></div>
+  <div class="page" id="pgDocs">
+    <div class="bar"><h1><span class="mascot"><i></i></span> เอกสาร</h1><p>อัปโหลดใบเสร็จ ให้ AI อ่านอัตโนมัติ</p></div>
+    <div class="steps" style="margin-top:14px">
+      <div class="step b1"><span class="n">ขั้น 1</span><b>อัปโหลดเอกสาร</b></div>
       <div class="step b2"><span class="n">ขั้น 2</span><b>AI อ่านใบเสร็จ</b></div>
       <div class="step b3"><span class="n">ขั้น 3</span><b>จัดหมวดอัตโนมัติ</b></div>
       <div class="step b4"><span class="n">ขั้น 4</span><b>สรุปงบรายเดือน</b></div>
       <div class="step b5"><span class="n">ขั้น 5</span><b>ตรวจขาด/ซ้ำ</b></div>
       <div class="step b6"><span class="n">ขั้น 6</span><b>ส่งออก Excel</b></div>
     </div>
-
-    <div id="noKey" class="banner" style="display:none">
-      ⚙️ ยังไม่ได้ตั้งค่า <b>ผู้ให้บริการ AI</b> — ไปที่แท็บ "ตั้งค่า" เลือกบริการและใส่ API Key เพื่อให้ AI อ่านใบเสร็จได้
-    </div>
-
-    <div class="drop" id="drop">
-      <div class="ic">🧾</div>
-      <b>อัปโหลดใบเสร็จ / ใบกำกับภาษี</b>
-      <span>ถ่ายรูป หรือเลือกไฟล์รูป/PDF — AI อ่านให้ทันที</span>
+    <div class="drop" id="drop" style="margin-top:14px">
+      <div class="ic">🧾</div><b>อัปโหลดใบเสร็จ / ใบกำกับภาษี</b>
+      <span>ถ่ายรูป หรือเลือกไฟล์รูป/PDF — รองรับหลายไฟล์</span>
     </div>
     <input type="file" id="file" accept="image/*,application/pdf" capture="environment" multiple hidden>
-
-    <div class="row between" style="margin:14px 2px 10px">
-      <h2 class="sec" style="margin:0">📂 เอกสารทั้งหมด <span class="pill" id="cntPill">0</span></h2>
-      <button class="btn line sm" id="addManual">+ เพิ่มเอง</button>
-    </div>
-    <div id="docList"></div>
-  </div>
-
-  <!-- ===== หมวดหมู่ ===== -->
-  <div class="page" id="pgCats">
-    <h2 class="sec">🏷️ ค่าใช้จ่ายตามหมวด</h2>
-    <div class="row between" style="margin-bottom:10px">
-      <select class="fc" id="catMonth" style="width:auto;flex:1"></select>
-    </div>
-    <div id="catList"></div>
+    <div class="row between pad" style="margin:16px 0 10px"><h2 class="sec" style="margin:0">ทั้งหมด <span class="pill" id="cntPill">0</span></h2><button class="btn line sm" id="addManual">+ เพิ่มเอง</button></div>
+    <div class="search"><span>🔍</span><input id="docSearch" placeholder="ค้นหาชื่อร้าน / เลขที่เอกสาร"></div>
+    <div class="pad" id="docList"></div>
   </div>
 
   <!-- ===== สรุป ===== -->
   <div class="page" id="pgSum">
-    <h2 class="sec">📊 สรุปงบรายเดือน</h2>
-    <div class="row between" style="margin-bottom:12px">
-      <select class="fc" id="sumMonth" style="width:auto;flex:1"></select>
-      <button class="btn green sm" id="xlsBtn">⬇ Excel</button>
-    </div>
-    <div class="kpi" id="kpiBox"></div>
-    <div class="card">
-      <div class="row between" style="margin-bottom:6px">
-        <b>💡 สรุป & Insight โดย AI</b>
-        <button class="btn green sm" id="genInsight">สร้างสรุป</button>
+    <div class="bar"><h1><span class="mascot"><i></i></span> สรุปงบรายเดือน</h1><p>ตัวเลข + Insight ที่ตัดสินใจได้ทันที</p></div>
+    <div class="pad" style="margin-top:14px">
+      <div class="row between" style="margin-bottom:12px">
+        <select class="fc" id="sumMonth" style="width:auto;flex:1"></select>
+        <button class="btn green sm" id="xlsBtn">⬇ Excel</button>
       </div>
-      <div id="insightBox"><p class="tiny t3">กดปุ่ม "สร้างสรุป" เพื่อให้ AI เปลี่ยนตัวเลขเป็นคำสรุปที่อ่านแล้วเข้าใจทันที</p></div>
+      <div class="kpi" id="kpiBox"></div>
+      <div class="card">
+        <div class="row between" style="margin-bottom:6px"><b>💡 สรุป & Insight โดย AI</b><button class="btn green sm" id="genInsight">สร้างสรุป</button></div>
+        <div id="insightBox"><p class="tiny t3">กดปุ่ม "สร้างสรุป" เพื่อให้ AI เปลี่ยนตัวเลขเป็นคำสรุปที่อ่านแล้วเข้าใจทันที</p></div>
+      </div>
+      <div id="trendBox"></div>
+      <div id="sumBars"></div>
     </div>
-    <div id="trendBox"></div>
-    <div id="sumBars"></div>
   </div>
 
   <!-- ===== ตรวจสอบ ===== -->
   <div class="page" id="pgAudit">
-    <h2 class="sec">🔎 ตรวจเอกสารขาดและซ้ำ</h2>
-    <p class="tiny muted" style="margin:-6px 2px 12px">ก่อนปิดงวดบัญชี ระบบตรวจให้: ใบกำกับซ้ำ / ข้อมูลขาด / ยอดผิดปกติ</p>
-    <div id="auditList"></div>
+    <div class="bar"><h1><span class="mascot"><i></i></span> ตรวจเอกสาร</h1><p>ตรวจขาด/ซ้ำ ก่อนปิดงวดบัญชี</p></div>
+    <div class="pad" id="auditList" style="margin-top:14px"></div>
   </div>
 
   <!-- ===== ตั้งค่า ===== -->
   <div class="page" id="pgSet">
-    <h2 class="sec">⚙️ ตั้งค่า</h2>
-
-    <div class="card">
-      <b>🤖 ผู้ให้บริการ AI</b>
-      <p class="tiny t3" style="margin:5px 0 12px">เลือกได้หลายเจ้า สลับได้ตลอด · มีตัวเลือก "ฟรี" หลายตัว</p>
-      <select class="fc" id="provider">
-        <option value="gemini">Google Gemini — ฟรี ⭐ แนะนำ (รองรับ PDF, ใช้บนเว็บได้)</option>
-        <option value="openai">Groq / OpenRouter — ฟรี (โมเดลโอเพนซอร์ส)</option>
-        <option value="claude">Anthropic Claude — แม่นยำสูง (เสียเงิน)</option>
-        <option value="iapp">iApp OCR — สัญชาติไทย (อาจติด CORS บนเว็บ)</option>
-      </select>
-
-      <!-- gemini -->
-      <div class="pv" data-pv="gemini" style="margin-top:12px">
-        <label class="fl">Gemini API Key</label>
-        <input class="fc" id="k_gemini" type="password" placeholder="AIza..." autocomplete="off">
-        <p class="tiny t3" style="margin:6px 2px 0">ขอฟรีที่ aistudio.google.com/apikey</p>
-        <label class="fl" style="margin-top:12px">โมเดล</label>
-        <select class="fc" id="m_gemini">
-          <option value="gemini-2.0-flash">gemini-2.0-flash — เร็ว/ฟรี ⭐</option>
-          <option value="gemini-2.5-flash">gemini-2.5-flash — ใหม่กว่า</option>
-          <option value="gemini-2.5-pro">gemini-2.5-pro — ฉลาดสุด</option>
-          <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+    <div class="bar"><h1><span class="mascot"><i></i></span> ตั้งค่า</h1><p>ผู้ให้บริการ AI · ฟีเจอร์ · ข้อมูล</p></div>
+    <div class="pad" style="margin-top:14px">
+      <div class="card">
+        <b>🤖 ผู้ให้บริการ AI</b>
+        <p class="tiny t3" style="margin:5px 0 12px">เลือกได้หลายเจ้า สลับได้ตลอด · มีตัวเลือก "ฟรี" หลายตัว</p>
+        <select class="fc" id="provider">
+          <option value="gemini">Google Gemini — ฟรี ⭐ แนะนำ (รองรับ PDF, ใช้บนเว็บได้)</option>
+          <option value="openai">Groq / OpenRouter — ฟรี (โมเดลโอเพนซอร์ส)</option>
+          <option value="claude">Anthropic Claude — แม่นยำสูง (เสียเงิน)</option>
+          <option value="iapp">iApp OCR — สัญชาติไทย (อาจติด CORS บนเว็บ)</option>
         </select>
+        <div class="pv" data-pv="gemini" style="margin-top:12px">
+          <label class="fl">Gemini API Key</label><input class="fc" id="k_gemini" type="password" placeholder="AIza..." autocomplete="off">
+          <p class="tiny t3" style="margin:6px 2px 0">ขอฟรีที่ aistudio.google.com/apikey</p>
+          <label class="fl" style="margin-top:12px">โมเดล</label>
+          <select class="fc" id="m_gemini">
+            <option value="gemini-2.0-flash">gemini-2.0-flash — เร็ว/ฟรี ⭐</option>
+            <option value="gemini-2.5-flash">gemini-2.5-flash — ใหม่กว่า</option>
+            <option value="gemini-2.5-pro">gemini-2.5-pro — ฉลาดสุด</option>
+            <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+          </select>
+        </div>
+        <div class="pv" data-pv="openai" style="margin-top:12px;display:none">
+          <label class="fl">บริการ (OpenAI-compatible)</label>
+          <select class="fc" id="oaiPreset"><option value="groq">Groq — ฟรี เร็วมาก</option><option value="openrouter">OpenRouter — ฟรี (โมเดล :free)</option><option value="custom">กำหนดเอง</option></select>
+          <label class="fl" style="margin-top:12px">API Key</label><input class="fc" id="k_openai" type="password" placeholder="gsk_... / sk-or-..." autocomplete="off">
+          <p class="tiny t3" id="oaiHint" style="margin:6px 2px 0"></p>
+          <label class="fl" style="margin-top:12px">Base URL</label><input class="fc" id="oaiBase" placeholder="https://api.groq.com/openai/v1">
+          <label class="fl" style="margin-top:12px">โมเดล (ต้องรองรับรูปภาพ)</label><input class="fc" id="m_openai" placeholder="meta-llama/llama-4-scout-17b-16e-instruct">
+        </div>
+        <div class="pv" data-pv="claude" style="margin-top:12px;display:none">
+          <label class="fl">Anthropic API Key</label><input class="fc" id="k_claude" type="password" placeholder="sk-ant-..." autocomplete="off">
+          <p class="tiny t3" style="margin:6px 2px 0">ขอที่ console.anthropic.com</p>
+          <label class="fl" style="margin-top:12px">โมเดล</label>
+          <select class="fc" id="m_claude"><option value="claude-opus-4-8">Claude Opus 4.8 — แม่นยำสูงสุด</option><option value="claude-sonnet-4-6">Claude Sonnet 4.6 — สมดุล</option><option value="claude-haiku-4-5">Claude Haiku 4.5 — ประหยัด</option></select>
+        </div>
+        <div class="pv" data-pv="iapp" style="margin-top:12px;display:none">
+          <label class="fl">iApp API Key</label><input class="fc" id="k_iapp" type="password" placeholder="apikey จาก iapp.co.th" autocomplete="off">
+          <p class="tiny t3" style="margin:6px 2px 0">Receipt OCR · ขอที่ iapp.co.th — หมายเหตุ: เบราว์เซอร์อาจถูกบล็อก CORS หากใช้ไม่ได้ ให้สลับไป Gemini</p>
+        </div>
+        <button class="btn line sm" id="testKey" style="width:100%;margin-top:14px">ทดสอบการเชื่อมต่อ</button>
       </div>
 
-      <!-- openai compatible -->
-      <div class="pv" data-pv="openai" style="margin-top:12px;display:none">
-        <label class="fl">บริการ (OpenAI-compatible)</label>
-        <select class="fc" id="oaiPreset">
-          <option value="groq">Groq — ฟรี เร็วมาก</option>
-          <option value="openrouter">OpenRouter — ฟรี (โมเดล :free)</option>
-          <option value="custom">กำหนดเอง</option>
-        </select>
-        <label class="fl" style="margin-top:12px">API Key</label>
-        <input class="fc" id="k_openai" type="password" placeholder="gsk_... / sk-or-..." autocomplete="off">
-        <p class="tiny t3" id="oaiHint" style="margin:6px 2px 0"></p>
-        <label class="fl" style="margin-top:12px">Base URL</label>
-        <input class="fc" id="oaiBase" placeholder="https://api.groq.com/openai/v1">
-        <label class="fl" style="margin-top:12px">โมเดล (ต้องรองรับรูปภาพ)</label>
-        <input class="fc" id="m_openai" placeholder="meta-llama/llama-4-scout-17b-16e-instruct">
+      <div class="card">
+        <b>🧩 ฟีเจอร์เสริม (เปิด/ปิดได้)</b>
+        <div style="margin-top:8px">
+          <div class="tog"><div class="lab"><b>🌙 โหมดมืด</b><span>ถนอมสายตา</span></div><div class="sw" data-ft="dark"></div></div>
+          <div class="tog"><div class="lab"><b>💰 แยกรายรับ / รายจ่าย</b><span>ลงบัญชีทั้งเงินเข้าและออก</span></div><div class="sw" data-ft="inout"></div></div>
+          <div class="tog"><div class="lab"><b>📈 กราฟแนวโน้มรายเดือน</b><span>ดูภาพรวมหลายเดือน</span></div><div class="sw" data-ft="trend"></div></div>
+          <div class="tog"><div class="lab"><b>🔎 ตรวจสอบอัตโนมัติ</b><span>เตือนเอกสารซ้ำ/ขาด</span></div><div class="sw" data-ft="audit"></div></div>
+          <div class="tog"><div class="lab"><b>🔒 ล็อกด้วย PIN</b><span>ใส่รหัสก่อนเปิดแอป</span></div><div class="sw" data-ft="pin"></div></div>
+        </div>
       </div>
 
-      <!-- claude -->
-      <div class="pv" data-pv="claude" style="margin-top:12px;display:none">
-        <label class="fl">Anthropic API Key</label>
-        <input class="fc" id="k_claude" type="password" placeholder="sk-ant-..." autocomplete="off">
-        <p class="tiny t3" style="margin:6px 2px 0">ขอที่ console.anthropic.com</p>
-        <label class="fl" style="margin-top:12px">โมเดล</label>
-        <select class="fc" id="m_claude">
-          <option value="claude-opus-4-8">Claude Opus 4.8 — แม่นยำสูงสุด</option>
-          <option value="claude-sonnet-4-6">Claude Sonnet 4.6 — สมดุล</option>
-          <option value="claude-haiku-4-5">Claude Haiku 4.5 — ประหยัด</option>
-        </select>
+      <div class="card">
+        <label class="fl">ชื่อกิจการ (สำหรับสรุป/Excel)</label>
+        <input class="fc" id="bizName" placeholder="เช่น ร้านค้าตัวอย่าง">
+        <button class="btn" id="saveSet" style="margin-top:14px">บันทึกการตั้งค่า</button>
       </div>
 
-      <!-- iapp -->
-      <div class="pv" data-pv="iapp" style="margin-top:12px;display:none">
-        <label class="fl">iApp API Key</label>
-        <input class="fc" id="k_iapp" type="password" placeholder="apikey จาก iapp.co.th" autocomplete="off">
-        <p class="tiny t3" style="margin:6px 2px 0">Receipt OCR · ขอที่ iapp.co.th — หมายเหตุ: เบราว์เซอร์อาจถูกบล็อก CORS หากใช้ไม่ได้ ให้สลับไป Gemini</p>
+      <div class="card">
+        <b>📦 ข้อมูล & ส่งออก</b>
+        <p class="tiny t3" style="margin:6px 0 12px">ข้อมูลทั้งหมดเก็บบนเครื่องคุณ ไม่ออกไปไหน</p>
+        <button class="btn green" id="xlsBtn2">⬇ ส่งออก Excel (.xlsx)</button>
+        <div class="grid2" style="margin-top:10px"><button class="btn line sm" id="expData" style="width:100%">สำรอง (JSON)</button><button class="btn line sm" id="impData" style="width:100%">กู้คืน</button></div>
+        <input type="file" id="impFile" accept="application/json" hidden>
+        <button class="btn line sm" id="clrData" style="width:100%;margin-top:10px;color:var(--red)">ล้างข้อมูลทั้งหมด</button>
       </div>
-
-      <button class="btn line sm" id="testKey" style="width:100%;margin-top:14px">ทดสอบการเชื่อมต่อ</button>
+      <p class="tiny t3" style="text-align:center;margin-bottom:10px">บัญชี AI · ตั้งระบบครั้งเดียว ใช้ได้ทุกเดือน</p>
     </div>
-
-    <div class="card">
-      <b>🧩 ฟีเจอร์เสริม (เปิด/ปิดได้)</b>
-      <div style="margin-top:8px">
-        <div class="tog"><div class="lab"><b>🌙 โหมดมืด</b><span>ถนอมสายตา</span></div><div class="sw" data-ft="dark"></div></div>
-        <div class="tog"><div class="lab"><b>💰 แยกรายรับ / รายจ่าย</b><span>ลงบัญชีทั้งเงินเข้าและออก</span></div><div class="sw" data-ft="inout"></div></div>
-        <div class="tog"><div class="lab"><b>📈 กราฟแนวโน้มรายเดือน</b><span>ดูภาพรวมหลายเดือนในหน้าสรุป</span></div><div class="sw" data-ft="trend"></div></div>
-        <div class="tog"><div class="lab"><b>🔎 ตรวจสอบอัตโนมัติ</b><span>เตือนเอกสารซ้ำ/ขาด</span></div><div class="sw" data-ft="audit"></div></div>
-        <div class="tog"><div class="lab"><b>🔒 ล็อกด้วย PIN</b><span>ใส่รหัสก่อนเปิดแอป</span></div><div class="sw" data-ft="pin"></div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <label class="fl">ชื่อกิจการ (สำหรับสรุป/Excel)</label>
-      <input class="fc" id="bizName" placeholder="เช่น ร้านค้าตัวอย่าง">
-      <button class="btn" id="saveSet" style="margin-top:14px">บันทึกการตั้งค่า</button>
-    </div>
-
-    <div class="card">
-      <b>📦 ข้อมูล & ส่งออก</b>
-      <p class="tiny t3" style="margin:6px 0 12px">ข้อมูลทั้งหมดเก็บบนเครื่องคุณ ไม่ออกไปไหน</p>
-      <button class="btn green" id="xlsBtn2">⬇ ส่งออก Excel (.xlsx)</button>
-      <div class="grid2" style="margin-top:10px">
-        <button class="btn line sm" id="expData" style="width:100%">สำรอง (JSON)</button>
-        <button class="btn line sm" id="impData" style="width:100%">กู้คืน</button>
-      </div>
-      <input type="file" id="impFile" accept="application/json" hidden>
-      <button class="btn line sm" id="clrData" style="width:100%;margin-top:10px;color:var(--red)">ล้างข้อมูลทั้งหมด</button>
-    </div>
-    <p class="tiny t3" style="text-align:center;margin-bottom:10px">บัญชี AI · ตั้งระบบครั้งเดียว ใช้ได้ทุกเดือน</p>
   </div>
 
   <div class="nav">
-    <button class="on" data-go="Docs"><span class="i">🧾</span>เอกสาร</button>
-    <button data-go="Cats"><span class="i">🏷️</span>หมวดหมู่</button>
+    <button class="on" data-go="Home"><span class="i">🏠</span>หน้าหลัก</button>
+    <button data-go="Docs"><span class="i">🧾</span>เอกสาร</button>
     <button data-go="Sum"><span class="i">📊</span>สรุป</button>
     <button data-go="Audit"><span class="i">🔎</span>ตรวจสอบ<span class="badge" id="auditBadge" style="display:none">0</span></button>
     <button data-go="Set"><span class="i">⚙️</span>ตั้งค่า</button>
   </div>
 </div>
 
+<button class="fab" id="fab" title="สแกนใบเสร็จ">＋</button>
 <div class="mask" id="mask"><div class="sheet" id="sheet"></div></div>
 <div class="toast" id="toast"></div>
-
-<!-- PIN lock -->
-<div class="lock" id="lock">
-  <div class="botbig"></div>
-  <b style="font-size:16px">ใส่รหัส PIN</b>
-  <div class="pinDots" id="pinDots"></div>
-  <div class="pad" id="pad"></div>
-</div>
+<div class="lock" id="lock"><div class="bb"></div><b style="font-size:16px">ใส่รหัส PIN</b><div class="pinDots" id="pinDots"></div><div class="kpad" id="kpad"></div></div>
 
 <script>
 //==================== STATE ====================
-const CATS = [
-  {k:'travel',  n:'ค่าเดินทาง',     c:'#e8503a', i:'✈️'},
-  {k:'market',  n:'ค่าการตลาด',     c:'#e85aa0', i:'📣'},
-  {k:'material',n:'ค่าวัตถุดิบ',     c:'#2fb380', i:'📦'},
-  {k:'software',n:'ค่าซอฟต์แวร์',   c:'#7c5cf0', i:'💻'},
-  {k:'staff',   n:'ค่าพนักงาน',     c:'#3d8bf2', i:'👤'},
-  {k:'utility', n:'ค่าสาธารณูปโภค', c:'#f3a712', i:'💡'},
-  {k:'rent',    n:'ค่าเช่า',         c:'#5b8c5a', i:'🏠'},
-  {k:'income',  n:'รายรับ/ขาย',      c:'#16a34a', i:'💵'},
-  {k:'other',   n:'อื่นๆ',           c:'#9a9183', i:'🗂️'},
+const CATS=[
+ {k:'travel',n:'ค่าเดินทาง',c:'#e8503a',i:'✈️'},{k:'market',n:'ค่าการตลาด',c:'#e85aa0',i:'📣'},
+ {k:'material',n:'ค่าวัตถุดิบ',c:'#1fae73',i:'📦'},{k:'software',n:'ค่าซอฟต์แวร์',c:'#7c5cf0',i:'💻'},
+ {k:'staff',n:'ค่าพนักงาน',c:'#3d8bf2',i:'👤'},{k:'utility',n:'ค่าสาธารณูปโภค',c:'#f3a712',i:'💡'},
+ {k:'rent',n:'ค่าเช่า',c:'#5b8c5a',i:'🏠'},{k:'income',n:'รายรับ/ขาย',c:'#16a34a',i:'💵'},{k:'other',n:'อื่นๆ',c:'#9a9183',i:'🗂️'}
 ];
-const catBy = k => CATS.find(c=>c.k===k) || CATS[CATS.length-1];
-
-const OAI_PRESETS = {
-  groq:{base:'https://api.groq.com/openai/v1', model:'meta-llama/llama-4-scout-17b-16e-instruct', hint:'ขอฟรีที่ console.groq.com'},
-  openrouter:{base:'https://openrouter.ai/api/v1', model:'meta-llama/llama-3.2-11b-vision-instruct:free', hint:'ขอฟรีที่ openrouter.ai · เลือกโมเดลลงท้าย :free'},
-  custom:{base:'', model:'', hint:'ใส่ Base URL และโมเดลที่รองรับรูปภาพเอง'}
+const catBy=k=>CATS.find(c=>c.k===k)||CATS[CATS.length-1];
+const OAI_PRESETS={
+ groq:{base:'https://api.groq.com/openai/v1',model:'meta-llama/llama-4-scout-17b-16e-instruct',hint:'ขอฟรีที่ console.groq.com'},
+ openrouter:{base:'https://openrouter.ai/api/v1',model:'meta-llama/llama-3.2-11b-vision-instruct:free',hint:'ขอฟรีที่ openrouter.ai · เลือกโมเดลลงท้าย :free'},
+ custom:{base:'',model:'',hint:'ใส่ Base URL และโมเดลที่รองรับรูปภาพเอง'}
 };
+const LS='acctai_v2';
+let DB=load();
+function load(){try{return migrate(JSON.parse(localStorage.getItem(LS))||JSON.parse(localStorage.getItem('acctai_v1'))||def())}catch(e){return def()}}
+function def(){return{records:[],settings:{provider:'gemini',keys:{gemini:'',openai:'',claude:'',iapp:''},models:{gemini:'gemini-2.0-flash',openai:OAI_PRESETS.groq.model,claude:'claude-opus-4-8'},oai:{preset:'groq',base:OAI_PRESETS.groq.base},bizName:'',features:{dark:false,inout:false,trend:true,audit:true,pin:false},pin:''}}}
+function migrate(d){const b=def();d.settings=Object.assign({},b.settings,d.settings||{});d.settings.keys=Object.assign({},b.settings.keys,d.settings.keys||{});d.settings.models=Object.assign({},b.settings.models,d.settings.models||{});d.settings.oai=Object.assign({},b.settings.oai,d.settings.oai||{});d.settings.features=Object.assign({},b.settings.features,d.settings.features||{});if(d.settings.apiKey&&!d.settings.keys.claude)d.settings.keys.claude=d.settings.apiKey;d.records=(d.records||[]).map(r=>({type:'expense',...r}));return d}
+function save(){localStorage.setItem(LS,JSON.stringify(DB))}
 
-const LS = 'acctai_v2';
-let DB = load();
-function load(){ try{return migrate(JSON.parse(localStorage.getItem(LS)) || JSON.parse(localStorage.getItem('acctai_v1')) || def())}catch(e){return def()} }
-function def(){ return {records:[], settings:{
-  provider:'gemini',
-  keys:{gemini:'',openai:'',claude:'',iapp:''},
-  models:{gemini:'gemini-2.0-flash',openai:OAI_PRESETS.groq.model,claude:'claude-opus-4-8'},
-  oai:{preset:'groq', base:OAI_PRESETS.groq.base},
-  bizName:'',
-  features:{dark:false,inout:false,trend:true,audit:true,pin:false},
-  pin:''
-}} }
-function migrate(d){
-  const base=def();
-  d.settings = Object.assign({}, base.settings, d.settings||{});
-  d.settings.keys = Object.assign({}, base.settings.keys, d.settings.keys||{});
-  d.settings.models = Object.assign({}, base.settings.models, d.settings.models||{});
-  d.settings.oai = Object.assign({}, base.settings.oai, d.settings.oai||{});
-  d.settings.features = Object.assign({}, base.settings.features, d.settings.features||{});
-  // migrate v1 single apiKey -> claude
-  if(d.settings.apiKey && !d.settings.keys.claude){ d.settings.keys.claude=d.settings.apiKey; }
-  d.records = (d.records||[]).map(r=>({type:'expense', ...r}));
-  return d;
-}
-function save(){ localStorage.setItem(LS, JSON.stringify(DB)) }
-
-const $ = s => document.querySelector(s);
-const fmt = n => '฿'+(Number(n)||0).toLocaleString('th-TH',{maximumFractionDigits:2});
-const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-let toastT;
-function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),2600) }
-const F = k => DB.settings.features[k];
+const $=s=>document.querySelector(s);
+const fmt=n=>'฿'+(Number(n)||0).toLocaleString('th-TH',{maximumFractionDigits:2});
+const fmtK=n=>{n=Number(n)||0;return n>=1e6?'฿'+(n/1e6).toFixed(2)+'M':n>=1e4?'฿'+(n/1e3).toFixed(0)+'K':fmt(n)};
+const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600)}
+const F=k=>DB.settings.features[k];
 
 //==================== NAV ====================
-document.querySelectorAll('.nav button').forEach(b=>{
-  b.onclick=()=>{
-    document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on');
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-    $('#pg'+b.dataset.go).classList.add('on');
-    const g=b.dataset.go;
-    if(g==='Cats') renderCats();
-    if(g==='Sum') renderSum();
-    if(g==='Audit') renderAudit();
-    window.scrollTo(0,0);
-  };
-});
-function goto(g){ document.querySelector(`.nav button[data-go="${g}"]`).click() }
+document.querySelectorAll('.nav button').forEach(b=>{b.onclick=()=>{
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));$('#pg'+b.dataset.go).classList.add('on');
+ const g=b.dataset.go;if(g==='Home')renderHome();if(g==='Sum')renderSum();if(g==='Audit')renderAudit();
+ $('#fab').style.display=(g==='Home'||g==='Docs')?'flex':'none';window.scrollTo(0,0);
+}});
+function goto(g){document.querySelector(`.nav button[data-go="${g}"]`).click()}
+$('#seeAll').onclick=()=>goto('Docs');
+$('#fab').onclick=()=>{ if(!currentKey()){toast('ตั้งค่าผู้ให้บริการก่อน');goto('Set');return} $('#file').click(); };
 
-//==================== SETTINGS UI ====================
-function showProvider(){
-  const p=$('#provider').value;
-  document.querySelectorAll('.pv').forEach(el=>el.style.display = el.dataset.pv===p?'block':'none');
+//==================== SETTINGS ====================
+function showProvider(){const p=$('#provider').value;document.querySelectorAll('.pv').forEach(el=>el.style.display=el.dataset.pv===p?'block':'none')}
+function applyPreset(){const p=$('#oaiPreset').value,pr=OAI_PRESETS[p];$('#oaiHint').textContent=pr.hint;if(p!=='custom'){$('#oaiBase').value=pr.base;$('#m_openai').value=pr.model}}
+function loadSet(){const s=DB.settings;
+ $('#provider').value=s.provider;$('#k_gemini').value=s.keys.gemini;$('#m_gemini').value=s.models.gemini;
+ $('#k_openai').value=s.keys.openai;$('#m_openai').value=s.models.openai;$('#oaiPreset').value=s.oai.preset;$('#oaiBase').value=s.oai.base;$('#oaiHint').textContent=OAI_PRESETS[s.oai.preset].hint;
+ $('#k_claude').value=s.keys.claude;$('#m_claude').value=s.models.claude;$('#k_iapp').value=s.keys.iapp;$('#bizName').value=s.bizName;
+ document.querySelectorAll('.sw').forEach(sw=>sw.classList.toggle('on',!!s.features[sw.dataset.ft]));
+ showProvider();applyTheme();$('#noKey').style.display=currentKey()?'none':'block';
+ $('#greet').textContent=s.bizName||'บัญชี AI';$('#hdSub').textContent='ผู้ให้บริการ: '+provName();
 }
-function applyPreset(){
-  const p=$('#oaiPreset').value; const pr=OAI_PRESETS[p];
-  $('#oaiHint').textContent=pr.hint;
-  if(p!=='custom'){ $('#oaiBase').value=pr.base; $('#m_openai').value=pr.model; }
-}
-function loadSet(){
-  const s=DB.settings;
-  $('#provider').value=s.provider;
-  $('#k_gemini').value=s.keys.gemini; $('#m_gemini').value=s.models.gemini;
-  $('#k_openai').value=s.keys.openai; $('#m_openai').value=s.models.openai;
-  $('#oaiPreset').value=s.oai.preset; $('#oaiBase').value=s.oai.base;
-  $('#oaiHint').textContent=OAI_PRESETS[s.oai.preset].hint;
-  $('#k_claude').value=s.keys.claude; $('#m_claude').value=s.models.claude;
-  $('#k_iapp').value=s.keys.iapp;
-  $('#bizName').value=s.bizName;
-  document.querySelectorAll('.sw').forEach(sw=>sw.classList.toggle('on', !!s.features[sw.dataset.ft]));
-  showProvider();
-  applyTheme();
-  $('#noKey').style.display = currentKey()? 'none':'block';
-  $('#hdSub').textContent = 'ผู้ให้บริการ: '+provName();
-}
-function provName(){ return ({gemini:'Gemini',openai:OAI_PRESETS[DB.settings.oai.preset]? (DB.settings.oai.preset==='groq'?'Groq':DB.settings.oai.preset==='openrouter'?'OpenRouter':'Custom'):'OpenAI',claude:'Claude',iapp:'iApp'})[DB.settings.provider] }
-function currentKey(){ const s=DB.settings; return ({gemini:s.keys.gemini,openai:s.keys.openai,claude:s.keys.claude,iapp:s.keys.iapp})[s.provider] }
-function applyTheme(){ document.body.classList.toggle('dark', !!DB.settings.features.dark) }
-
-$('#provider').onchange=showProvider;
-$('#oaiPreset').onchange=applyPreset;
-document.querySelectorAll('.sw').forEach(sw=>sw.onclick=()=>{
-  const k=sw.dataset.ft; DB.settings.features[k]=!DB.settings.features[k];
-  sw.classList.toggle('on',DB.settings.features[k]); save();
-  if(k==='dark') applyTheme();
-  if(k==='pin' && DB.settings.features[k] && !DB.settings.pin){ setupPin(); }
-  if(k==='audit') refreshBadge();
-});
-$('#saveSet').onclick=()=>{
-  const s=DB.settings;
-  s.provider=$('#provider').value;
-  s.keys.gemini=$('#k_gemini').value.trim(); s.models.gemini=$('#m_gemini').value;
-  s.keys.openai=$('#k_openai').value.trim(); s.models.openai=$('#m_openai').value.trim();
-  s.oai.preset=$('#oaiPreset').value; s.oai.base=$('#oaiBase').value.trim();
-  s.keys.claude=$('#k_claude').value.trim(); s.models.claude=$('#m_claude').value;
-  s.keys.iapp=$('#k_iapp').value.trim();
-  s.bizName=$('#bizName').value.trim();
-  save(); loadSet(); toast('บันทึกแล้ว ✓');
-};
-$('#testKey').onclick=async()=>{
-  $('#saveSet').onclick();
-  const btn=$('#testKey'); btn.textContent='กำลังทดสอบ...';
-  try{ await testProvider(); toast('เชื่อมต่อสำเร็จ ✓'); }
-  catch(e){ toast('ผิดพลาด: '+e.message); }
-  btn.textContent='ทดสอบการเชื่อมต่อ';
-};
+function provName(){const p=DB.settings.provider;if(p==='openai')return DB.settings.oai.preset==='groq'?'Groq':DB.settings.oai.preset==='openrouter'?'OpenRouter':'Custom';return{gemini:'Gemini',claude:'Claude',iapp:'iApp'}[p]}
+function currentKey(){const s=DB.settings;return{gemini:s.keys.gemini,openai:s.keys.openai,claude:s.keys.claude,iapp:s.keys.iapp}[s.provider]}
+function applyTheme(){document.body.classList.toggle('dark',!!DB.settings.features.dark)}
+$('#provider').onchange=showProvider;$('#oaiPreset').onchange=applyPreset;
+document.querySelectorAll('.sw').forEach(sw=>sw.onclick=()=>{const k=sw.dataset.ft;DB.settings.features[k]=!DB.settings.features[k];sw.classList.toggle('on',DB.settings.features[k]);save();if(k==='dark')applyTheme();if(k==='pin'&&DB.settings.features[k]&&!DB.settings.pin)setupPin();if(k==='audit')refreshBadge()});
+$('#saveSet').onclick=()=>{const s=DB.settings;s.provider=$('#provider').value;s.keys.gemini=$('#k_gemini').value.trim();s.models.gemini=$('#m_gemini').value;s.keys.openai=$('#k_openai').value.trim();s.models.openai=$('#m_openai').value.trim();s.oai.preset=$('#oaiPreset').value;s.oai.base=$('#oaiBase').value.trim();s.keys.claude=$('#k_claude').value.trim();s.models.claude=$('#m_claude').value;s.keys.iapp=$('#k_iapp').value.trim();s.bizName=$('#bizName').value.trim();save();loadSet();toast('บันทึกแล้ว ✓')};
+$('#testKey').onclick=async()=>{$('#saveSet').onclick();const btn=$('#testKey');btn.textContent='กำลังทดสอบ...';try{await testProvider();toast('เชื่อมต่อสำเร็จ ✓')}catch(e){toast('ผิดพลาด: '+e.message)}btn.textContent='ทดสอบการเชื่อมต่อ'};
 
 //==================== AI PROVIDERS ====================
-function b64FromDataUrl(u){ return u.split(',')[1] }
-const EXTRACT_FIELDS = `{
- "vendor":"ชื่อร้าน/ผู้ขาย",
- "taxId":"เลขผู้เสียภาษี 13 หลัก หรือ ''",
- "invoiceNumber":"เลขที่ใบกำกับ/ใบเสร็จ หรือ ''",
- "date":"YYYY-MM-DD (แปลง พ.ศ.เป็น ค.ศ. ลบ 543)",
- "subtotal":ยอดก่อนภาษีเป็นตัวเลข,
- "vat":ภาษีมูลค่าเพิ่มเป็นตัวเลข,
- "total":ยอดรวมสุทธิเป็นตัวเลข,
- "category":"หนึ่งใน: ${CATS.map(c=>c.k).join('|')}",
- "lineItems":[{"name":"ชื่อ","qty":จำนวน,"amount":ยอด}],
- "confidence":0ถึง1,
- "note":"สิ่งที่ไม่แน่ใจ ภาษาไทยสั้นๆ"
-}`;
-const EXTRACT_PROMPT = `คุณเป็นผู้ช่วยบัญชี อ่านใบเสร็จ/ใบกำกับภาษีนี้แล้วดึงข้อมูลเป็น JSON เท่านั้น (ไม่มีข้อความอื่น) ตามรูปแบบนี้:
-${EXTRACT_FIELDS}
-กฎ: แปลงปี พ.ศ.เป็น ค.ศ.เสมอ, ตัวเลขไม่มีเครื่องหมาย/คอมม่า, จัดหมวดให้เหมาะกับเนื้อหา, ถ้าอ่านไม่ได้ให้เดาอย่างสมเหตุสมผลและระบุใน note`;
-
-function parseJSON(txt){
-  if(!txt) throw new Error('ไม่มีข้อมูลตอบกลับ');
-  try{ return JSON.parse(txt) }catch(e){}
-  const m=txt.match(/\{[\s\S]*\}/); if(m){ try{ return JSON.parse(m[0]) }catch(e){} }
-  throw new Error('แปลงข้อมูลไม่ได้');
-}
-function normalize(p){
-  const o={ vendor:p.vendor||'', taxId:p.taxId||'', invoiceNumber:p.invoiceNumber||'',
-    date:(p.date||'').slice(0,10), subtotal:+p.subtotal||0, vat:+p.vat||0, total:+p.total||0,
-    category:CATS.some(c=>c.k===p.category)?p.category:'other',
-    lineItems:Array.isArray(p.lineItems)?p.lineItems:[], confidence:p.confidence, note:p.note||'' };
-  if(!o.total && o.subtotal) o.total=o.subtotal+o.vat;
-  o.type = o.category==='income'?'income':'expense';
-  o.month = (o.date||'').slice(0,7) || new Date().toISOString().slice(0,7);
-  return o;
-}
-
-async function aiExtract(file, dataUrl){
-  const p=DB.settings.provider, isPdf=file.type==='application/pdf', mime=file.type||'image/jpeg', b64=b64FromDataUrl(dataUrl);
-  let raw;
-  if(p==='gemini') raw=await geminiExtract(b64,mime);
-  else if(p==='claude') raw=await claudeExtract(b64,mime,isPdf);
-  else if(p==='openai'){ if(isPdf) throw new Error('บริการนี้ไม่รองรับ PDF — ใช้รูปภาพ หรือสลับเป็น Gemini'); raw=await openaiExtract(b64,mime); }
-  else if(p==='iapp') return await iappExtract(file);
-  return normalize(raw);
-}
-
-// Gemini
-async function geminiExtract(b64,mime){
-  const k=DB.settings.keys.gemini; if(!k) throw new Error('ยังไม่ใส่ Gemini API Key');
-  const model=DB.settings.models.gemini;
-  const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(k)}`;
-  const body={ contents:[{parts:[ {inline_data:{mime_type:mime,data:b64}}, {text:EXTRACT_PROMPT} ]}],
-    generationConfig:{ temperature:0, responseMimeType:'application/json' } };
-  const r=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
-  const j=await r.json(); if(!r.ok) throw new Error(j.error?.message||('HTTP '+r.status));
-  const txt=(j.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');
-  return parseJSON(txt);
-}
-// Claude
-function claudeHeaders(){ return {'content-type':'application/json','x-api-key':DB.settings.keys.claude,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'} }
-async function claudeExtract(b64,mime,isPdf){
-  if(!DB.settings.keys.claude) throw new Error('ยังไม่ใส่ Claude API Key');
-  const block=isPdf?{type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}}
-    :{type:'image',source:{type:'base64',media_type:mime,data:b64}};
-  const body={model:DB.settings.models.claude,max_tokens:1500,messages:[{role:'user',content:[block,{type:'text',text:EXTRACT_PROMPT}]}]};
-  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:claudeHeaders(),body:JSON.stringify(body)});
-  const j=await r.json(); if(!r.ok) throw new Error(j.error?.message||('HTTP '+r.status));
-  return parseJSON((j.content||[]).filter(b=>b.type==='text').map(b=>b.text).join(''));
-}
-// OpenAI-compatible (Groq / OpenRouter / custom)
-async function openaiExtract(b64,mime){
-  const k=DB.settings.keys.openai; if(!k) throw new Error('ยังไม่ใส่ API Key');
-  const base=DB.settings.oai.base.replace(/\/$/,''); const model=DB.settings.models.openai;
-  const body={model,max_tokens:1500,temperature:0,
-    messages:[{role:'user',content:[ {type:'text',text:EXTRACT_PROMPT},
-      {type:'image_url',image_url:{url:`data:${mime};base64,${b64}`}} ]}],
-    response_format:{type:'json_object'}};
-  const r=await fetch(base+'/chat/completions',{method:'POST',
-    headers:{'content-type':'application/json','authorization':'Bearer '+k},body:JSON.stringify(body)});
-  const j=await r.json(); if(!r.ok) throw new Error(j.error?.message||('HTTP '+r.status));
-  return parseJSON(j.choices?.[0]?.message?.content||'');
-}
-// iApp Receipt OCR (best-effort field mapping)
-async function iappExtract(file){
-  const k=DB.settings.keys.iapp; if(!k) throw new Error('ยังไม่ใส่ iApp API Key');
-  const fd=new FormData(); fd.append('file',file,file.name||'receipt.jpg');
-  const r=await fetch('https://api.iapp.co.th/ocr/v3/receipt',{method:'POST',headers:{apikey:k},body:fd});
-  let j; try{ j=await r.json() }catch(e){ throw new Error('ตอบกลับไม่ใช่ JSON (อาจติด CORS) — สลับไป Gemini') }
-  if(!r.ok) throw new Error(j.message||j.error||('HTTP '+r.status));
-  return mapIApp(j);
-}
-function deepFind(obj,keys){
-  let found=null;
-  (function walk(o){ if(found!=null||!o||typeof o!=='object')return;
-    for(const kk in o){ const v=o[kk];
-      if(keys.some(p=>kk.toLowerCase().includes(p)) && (typeof v==='string'||typeof v==='number') && v!==''){ found=v; return }
-      if(v&&typeof v==='object') walk(v);
-    }})(obj);
-  return found;
-}
-function mapIApp(j){
-  const num=v=>{ if(v==null)return 0; const n=parseFloat(String(v).replace(/[, ฿]/g,'')); return isNaN(n)?0:n; };
-  let date=deepFind(j,['date'])||'';
-  const md=String(date).match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/)||String(date).match(/(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
-  if(md){ let y,mo,d; if(md[1].length===4){[,y,mo,d]=md}else{[,d,mo,y]=md} if(+y>2500)y-=543; date=`${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
-  const total=num(deepFind(j,['grand','total','net','amount']));
-  const vat=num(deepFind(j,['vat','tax_amount']));
-  const o={ vendor:deepFind(j,['merchant','shop','store','vendor','company','name'])||'',
-    taxId:String(deepFind(j,['tax_id','taxid','taxpayer','tin'])||''),
-    invoiceNumber:String(deepFind(j,['invoice','receipt_no','receiptno','docno','number','no'])||''),
-    date, subtotal:Math.max(0,total-vat), vat, total, category:'other', lineItems:[], confidence:0.8,
-    note:'อ่านด้วย iApp OCR — โปรดตรวจหมวดและตัวเลข' };
-  return normalize(o);
-}
-
-async function testProvider(){
-  const p=DB.settings.provider;
-  if(p==='gemini'){ const k=DB.settings.keys.gemini; if(!k)throw new Error('ใส่ Key ก่อน');
-    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${DB.settings.models.gemini}:generateContent?key=${encodeURIComponent(k)}`,
-      {method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'ตอบ OK'}]}]})});
-    if(!r.ok){const j=await r.json();throw new Error(j.error?.message||r.status)} return; }
-  if(p==='claude'){ const k=DB.settings.keys.claude; if(!k)throw new Error('ใส่ Key ก่อน');
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:claudeHeaders(),body:JSON.stringify({model:DB.settings.models.claude,max_tokens:16,messages:[{role:'user',content:'OK'}]})});
-    if(!r.ok){const j=await r.json();throw new Error(j.error?.message||r.status)} return; }
-  if(p==='openai'){ const k=DB.settings.keys.openai; if(!k)throw new Error('ใส่ Key ก่อน');
-    const r=await fetch(DB.settings.oai.base.replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+k},body:JSON.stringify({model:DB.settings.models.openai,max_tokens:5,messages:[{role:'user',content:'OK'}]})});
-    if(!r.ok){const j=await r.json().catch(()=>({}));throw new Error(j.error?.message||r.status)} return; }
-  if(p==='iapp'){ if(!DB.settings.keys.iapp)throw new Error('ใส่ Key ก่อน'); throw new Error('iApp ทดสอบได้เมื่ออัปโหลดเอกสารจริงเท่านั้น'); }
-}
+const EXTRACT_PROMPT=`คุณเป็นผู้ช่วยบัญชี อ่านใบเสร็จ/ใบกำกับภาษีนี้แล้วดึงข้อมูลเป็น JSON เท่านั้น (ไม่มีข้อความอื่น) ตามรูปแบบ:
+{"vendor":"ชื่อร้าน","taxId":"เลขผู้เสียภาษี13หลักหรือ''","invoiceNumber":"เลขที่เอกสารหรือ''","date":"YYYY-MM-DD แปลงพ.ศ.เป็นค.ศ.ลบ543","subtotal":ยอดก่อนภาษีตัวเลข,"vat":VATตัวเลข,"total":ยอดรวมตัวเลข,"category":"หนึ่งใน: ${CATS.map(c=>c.k).join('|')}","lineItems":[{"name":"ชื่อ","qty":จำนวน,"amount":ยอด}],"confidence":0ถึง1,"note":"สิ่งที่ไม่แน่ใจภาษาไทยสั้นๆ"}
+กฎ: แปลงปีพ.ศ.เป็นค.ศ.เสมอ, ตัวเลขไม่มีคอมม่า, จัดหมวดให้เหมาะกับเนื้อหา`;
+function b64FromDataUrl(u){return u.split(',')[1]}
+function parseJSON(t){if(!t)throw new Error('ไม่มีข้อมูลตอบกลับ');try{return JSON.parse(t)}catch(e){}const m=t.match(/\{[\s\S]*\}/);if(m){try{return JSON.parse(m[0])}catch(e){}}throw new Error('แปลงข้อมูลไม่ได้')}
+function normalize(p){const o={vendor:p.vendor||'',taxId:p.taxId||'',invoiceNumber:p.invoiceNumber||'',date:(p.date||'').slice(0,10),subtotal:+p.subtotal||0,vat:+p.vat||0,total:+p.total||0,category:CATS.some(c=>c.k===p.category)?p.category:'other',lineItems:Array.isArray(p.lineItems)?p.lineItems:[],confidence:p.confidence,note:p.note||''};if(!o.total&&o.subtotal)o.total=o.subtotal+o.vat;o.type=o.category==='income'?'income':'expense';o.month=(o.date||'').slice(0,7)||new Date().toISOString().slice(0,7);return o}
+async function aiExtract(file,dataUrl){const p=DB.settings.provider,isPdf=file.type==='application/pdf',mime=file.type||'image/jpeg',b64=b64FromDataUrl(dataUrl);let raw;
+ if(p==='gemini')raw=await geminiExtract(b64,mime);
+ else if(p==='claude')raw=await claudeExtract(b64,mime,isPdf);
+ else if(p==='openai'){if(isPdf)throw new Error('บริการนี้ไม่รองรับ PDF — ใช้รูปภาพ หรือสลับเป็น Gemini');raw=await openaiExtract(b64,mime)}
+ else if(p==='iapp')return await iappExtract(file);
+ return normalize(raw)}
+async function geminiExtract(b64,mime){const k=DB.settings.keys.gemini;if(!k)throw new Error('ยังไม่ใส่ Gemini API Key');const url=`https://generativelanguage.googleapis.com/v1beta/models/${DB.settings.models.gemini}:generateContent?key=${encodeURIComponent(k)}`;const r=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({contents:[{parts:[{inline_data:{mime_type:mime,data:b64}},{text:EXTRACT_PROMPT}]}],generationConfig:{temperature:0,responseMimeType:'application/json'}})});const j=await r.json();if(!r.ok)throw new Error(j.error?.message||('HTTP '+r.status));return parseJSON((j.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join(''))}
+function claudeHeaders(){return{'content-type':'application/json','x-api-key':DB.settings.keys.claude,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}}
+async function claudeExtract(b64,mime,isPdf){if(!DB.settings.keys.claude)throw new Error('ยังไม่ใส่ Claude API Key');const block=isPdf?{type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}}:{type:'image',source:{type:'base64',media_type:mime,data:b64}};const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:claudeHeaders(),body:JSON.stringify({model:DB.settings.models.claude,max_tokens:1500,messages:[{role:'user',content:[block,{type:'text',text:EXTRACT_PROMPT}]}]})});const j=await r.json();if(!r.ok)throw new Error(j.error?.message||('HTTP '+r.status));return parseJSON((j.content||[]).filter(b=>b.type==='text').map(b=>b.text).join(''))}
+async function openaiExtract(b64,mime){const k=DB.settings.keys.openai;if(!k)throw new Error('ยังไม่ใส่ API Key');const base=DB.settings.oai.base.replace(/\/$/,'');const r=await fetch(base+'/chat/completions',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+k},body:JSON.stringify({model:DB.settings.models.openai,max_tokens:1500,temperature:0,messages:[{role:'user',content:[{type:'text',text:EXTRACT_PROMPT},{type:'image_url',image_url:{url:`data:${mime};base64,${b64}`}}]}],response_format:{type:'json_object'}})});const j=await r.json();if(!r.ok)throw new Error(j.error?.message||('HTTP '+r.status));return parseJSON(j.choices?.[0]?.message?.content||'')}
+async function iappExtract(file){const k=DB.settings.keys.iapp;if(!k)throw new Error('ยังไม่ใส่ iApp API Key');const fd=new FormData();fd.append('file',file,file.name||'receipt.jpg');const r=await fetch('https://api.iapp.co.th/ocr/v3/receipt',{method:'POST',headers:{apikey:k},body:fd});let j;try{j=await r.json()}catch(e){throw new Error('ตอบกลับไม่ใช่ JSON (อาจติด CORS) — สลับไป Gemini')}if(!r.ok)throw new Error(j.message||j.error||('HTTP '+r.status));return mapIApp(j)}
+function deepFind(obj,keys){let f=null;(function w(o){if(f!=null||!o||typeof o!=='object')return;for(const kk in o){const v=o[kk];if(keys.some(p=>kk.toLowerCase().includes(p))&&(typeof v==='string'||typeof v==='number')&&v!==''){f=v;return}if(v&&typeof v==='object')w(v)}})(obj);return f}
+function mapIApp(j){const num=v=>{if(v==null)return 0;const n=parseFloat(String(v).replace(/[, ฿]/g,''));return isNaN(n)?0:n};let date=deepFind(j,['date'])||'';const md=String(date).match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/)||String(date).match(/(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);if(md){let y,mo,d;if(md[1].length===4){[,y,mo,d]=md}else{[,d,mo,y]=md}if(+y>2500)y-=543;date=`${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`}const total=num(deepFind(j,['grand','total','net','amount'])),vat=num(deepFind(j,['vat','tax_amount']));return normalize({vendor:deepFind(j,['merchant','shop','store','vendor','company','name'])||'',taxId:String(deepFind(j,['tax_id','taxid','taxpayer','tin'])||''),invoiceNumber:String(deepFind(j,['invoice','receipt_no','receiptno','docno','number','no'])||''),date,subtotal:Math.max(0,total-vat),vat,total,category:'other',lineItems:[],confidence:0.8,note:'อ่านด้วย iApp OCR — โปรดตรวจหมวดและตัวเลข'})}
+async function testProvider(){const p=DB.settings.provider;
+ if(p==='gemini'){const k=DB.settings.keys.gemini;if(!k)throw new Error('ใส่ Key ก่อน');const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${DB.settings.models.gemini}:generateContent?key=${encodeURIComponent(k)}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'ตอบ OK'}]}]})});if(!r.ok){const j=await r.json();throw new Error(j.error?.message||r.status)}return}
+ if(p==='claude'){const k=DB.settings.keys.claude;if(!k)throw new Error('ใส่ Key ก่อน');const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:claudeHeaders(),body:JSON.stringify({model:DB.settings.models.claude,max_tokens:16,messages:[{role:'user',content:'OK'}]})});if(!r.ok){const j=await r.json();throw new Error(j.error?.message||r.status)}return}
+ if(p==='openai'){const k=DB.settings.keys.openai;if(!k)throw new Error('ใส่ Key ก่อน');const r=await fetch(DB.settings.oai.base.replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+k},body:JSON.stringify({model:DB.settings.models.openai,max_tokens:5,messages:[{role:'user',content:'OK'}]})});if(!r.ok){const j=await r.json().catch(()=>({}));throw new Error(j.error?.message||r.status)}return}
+ if(p==='iapp'){if(!DB.settings.keys.iapp)throw new Error('ใส่ Key ก่อน');throw new Error('iApp ทดสอบได้เมื่ออัปโหลดเอกสารจริง')}}
 
 //==================== UPLOAD ====================
 $('#drop').onclick=()=>$('#file').click();
-$('#file').onchange=e=>{ const fs=[...e.target.files]; e.target.value=''; fs.forEach(handleFile) };
+$('#file').onchange=e=>{const fs=[...e.target.files];e.target.value='';fs.forEach(handleFile)};
 function fileToData(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
+async function handleFile(file){if(!currentKey()){toast('เลือกผู้ให้บริการ + ใส่ Key ก่อน');goto('Set');return}const dataUrl=await fileToData(file);const isPdf=file.type==='application/pdf';const rec={id:uid(),status:'reading',type:'expense',thumb:isPdf?'':dataUrl,createdAt:Date.now()};DB.records.unshift(rec);save();if($('#pgHome').classList.contains('on'))renderHome();renderDocs();try{const data=await aiExtract(file,dataUrl);Object.assign(rec,data,{status:'done'})}catch(err){rec.status='error';rec.error=err.message;toast('อ่านไม่สำเร็จ: '+err.message)}save();renderDocs();if($('#pgHome').classList.contains('on'))renderHome();refreshBadge()}
 
-async function handleFile(file){
-  if(!currentKey()){ toast('เลือกผู้ให้บริการ + ใส่ Key ก่อน'); goto('Set'); return }
-  const dataUrl=await fileToData(file);
-  const isPdf=file.type==='application/pdf';
-  const rec={id:uid(),status:'reading',type:'expense',thumb:isPdf?'':dataUrl,createdAt:Date.now()};
-  DB.records.unshift(rec); save(); renderDocs();
-  try{ const data=await aiExtract(file,dataUrl); Object.assign(rec,data,{status:'done'}); }
-  catch(err){ rec.status='error'; rec.error=err.message; toast('อ่านไม่สำเร็จ: '+err.message); }
-  save(); renderDocs(); refreshBadge();
+//==================== HELPERS ====================
+function monthLabel(m){if(!m)return '—';const[y,mo]=m.split('-');const names=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];return(names[+mo]||'')+' '+((+y)+543)}
+function monthsAvailable(){const set=new Set(DB.records.filter(r=>r.status==='done'&&r.month).map(r=>r.month));const a=[...set].sort().reverse();if(!a.length)a.push(new Date().toISOString().slice(0,7));return a}
+function fillMonthSelect(sel){const cur=sel.value,ms=monthsAvailable();sel.innerHTML=ms.map(m=>`<option value="${m}">${monthLabel(m)}</option>`).join('');if(ms.includes(cur))sel.value=cur}
+function recsOf(m){return DB.records.filter(r=>r.status==='done'&&r.month===m)}
+const isIncome=r=>r.type==='income';
+function recCardHTML(r){if(r.status==='reading')return `<div class="rec"><div class="row"><div class="thumb">📄</div><div class="grow"><div class="vend">AI กำลังอ่าน...</div><div class="meta row" style="gap:6px"><span class="spin" style="border-color:var(--line);border-top-color:var(--brand)"></span> โปรดรอสักครู่</div></div></div></div>`;
+ if(r.status==='error')return `<div class="rec" onclick="openRec('${r.id}')"><div class="row"><div class="thumb">⚠️</div><div class="grow"><div class="vend" style="color:var(--red)">อ่านไม่สำเร็จ</div><div class="meta">${esc(r.error||'')} · แตะกรอกเอง</div></div></div></div>`;
+ const c=catBy(r.category),inc=r.type==='income';
+ return `<div class="rec" onclick="openRec('${r.id}')"><div class="row between" style="align-items:flex-start">
+   <div class="row" style="align-items:flex-start;min-width:0">${r.thumb?`<img class="thumb" src="${r.thumb}">`:`<div class="thumb">🧾</div>`}
+   <div class="grow"><div class="vend">${esc(r.vendor||'ไม่ทราบชื่อ')}</div><div class="meta">${monthLabel(r.month)} · ${esc(r.invoiceNumber||'ไม่มีเลขที่')}</div>
+   <div style="margin-top:6px"><span class="cat-tag" style="background:${c.c}">${c.i} ${c.n}</span>${r._flag==='dup'?'<span class="flag dup" style="margin-left:5px">ซ้ำ</span>':''}</div></div></div>
+   <div style="text-align:right;flex:0 0 auto"><div class="amt ${inc?'tin':''}">${inc?'+':''}${fmt(r.total)}</div>${r.vat?`<div class="tiny t3">VAT ${fmt(r.vat)}</div>`:''}</div>
+   </div></div>`}
+
+//==================== HOME ====================
+function prevMonthStr(m){const[y,mo]=m.split('-').map(Number);const d=new Date(y,mo-2,1);return d.toISOString().slice(0,7)}
+function renderHome(){
+ const now=new Date().toISOString().slice(0,7);const recs=recsOf(now);
+ const exp=recs.filter(r=>!isIncome(r)).reduce((a,r)=>a+(+r.total||0),0);
+ const inc=recs.filter(isIncome).reduce((a,r)=>a+(+r.total||0),0);
+ if(F('inout')){$('#heroLab').textContent='คงเหลือสุทธิเดือนนี้';$('#heroAmt').textContent=fmt(inc-exp)}
+ else{$('#heroLab').textContent='รายจ่ายเดือนนี้';$('#heroAmt').textContent=fmt(exp)}
+ const pv=prevMonthStr(now);const pExp=recsOf(pv).filter(r=>!isIncome(r)).reduce((a,r)=>a+(+r.total||0),0);
+ const dEl=$('#heroDelta');
+ if(pExp>0){const diff=exp-pExp,pct=Math.round(diff/pExp*100);dEl.style.display='inline-flex';dEl.textContent=`${diff>=0?'▲':'▼'} ${Math.abs(pct)}% จากเดือนก่อน`}
+ else dEl.style.display='none';
+ // spark: last 6 calendar-ish months from available data
+ const months=[];for(let i=5;i>=0;i--){const d=new Date();d.setMonth(d.getMonth()-i);months.push(d.toISOString().slice(0,7))}
+ const sd=months.map(m=>recsOf(m).filter(r=>!isIncome(r)).reduce((a,r)=>a+(+r.total||0),0));const mx=Math.max(...sd,1);
+ $('#heroSpark').innerHTML=sd.map((v,i)=>`<i class="${i===5?'cur':''}" style="height:${Math.round(v/mx*100)}%"></i>`).join('');
+ // chips
+ const byCat={};recs.filter(r=>!isIncome(r)).forEach(r=>byCat[r.category]=(byCat[r.category]||0)+(+r.total||0));
+ const chips=CATS.filter(c=>byCat[c.k]>0).map(c=>({...c,v:byCat[c.k]})).sort((a,b)=>b.v-a.v);
+ $('#homeChips').innerHTML=chips.length?chips.map(c=>`<div class="chip"><span class="d" style="background:${c.c}"></span>${c.i} ${c.n} · ${fmtK(c.v)}</div>`).join(''):`<div class="tiny t3" style="padding:6px 2px">ยังไม่มีรายการเดือนนี้</div>`;
+ // recent
+ const rec5=DB.records.slice(0,4);
+ $('#homeRecent').innerHTML=rec5.length?rec5.map(recCardHTML).join(''):`<div class="empty"><div class="ic">📭</div><p>ยังไม่มีเอกสาร<br>แตะปุ่ม ＋ เพื่อสแกนใบเสร็จ</p></div>`;
 }
 
-//==================== RENDER: DOCS ====================
-function monthLabel(m){ if(!m)return '—'; const [y,mo]=m.split('-'); const names=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']; return (names[+mo]||'')+' '+((+y)+543) }
-function renderDocs(){
-  const list=$('#docList'); const recs=DB.records;
-  $('#cntPill').textContent=recs.length;
-  if(!recs.length){ list.innerHTML=`<div class="empty"><div class="ic">📭</div><p>ยังไม่มีเอกสาร<br>อัปโหลดใบเสร็จด้านบนเพื่อเริ่ม</p></div>`; return }
-  list.innerHTML=recs.map(r=>{
-    if(r.status==='reading') return `<div class="rec"><div class="row"><div class="thumb" style="display:flex;align-items:center;justify-content:center">📄</div><div class="grow"><div class="vend">AI กำลังอ่าน...</div><div class="meta row" style="gap:6px"><span class="spin" style="border-color:var(--line);border-top-color:var(--brand)"></span> โปรดรอสักครู่</div></div></div></div>`;
-    if(r.status==='error') return `<div class="rec" onclick="openRec('${r.id}')"><div class="row"><div class="thumb" style="display:flex;align-items:center;justify-content:center">⚠️</div><div class="grow"><div class="vend" style="color:var(--red)">อ่านไม่สำเร็จ</div><div class="meta">${esc(r.error||'')} · แตะเพื่อกรอกเอง</div></div></div></div>`;
-    const c=catBy(r.category); const inc=r.type==='income';
-    return `<div class="rec" onclick="openRec('${r.id}')"><div class="top">
-      <div class="row" style="align-items:flex-start">
-        ${r.thumb?`<img class="thumb" src="${r.thumb}">`:`<div class="thumb" style="display:flex;align-items:center;justify-content:center">🧾</div>`}
-        <div class="grow">
-          <div class="vend">${esc(r.vendor||'ไม่ทราบชื่อ')}</div>
-          <div class="meta">${monthLabel(r.month)} · ${esc(r.invoiceNumber||'ไม่มีเลขที่')}</div>
-          <div style="margin-top:6px"><span class="cat-tag" style="background:${c.c}">${c.i} ${c.n}</span>
-          ${r._flag==='dup'?'<span class="flag dup" style="margin-left:5px">ซ้ำ</span>':''}</div>
-        </div>
-      </div>
-      <div style="text-align:right"><div class="amt ${inc?'tin':''}">${inc?'+':''}${fmt(r.total)}</div>${r.vat?`<div class="tiny t3">VAT ${fmt(r.vat)}</div>`:''}</div>
-    </div></div>`;
-  }).join('');
-}
+//==================== DOCS ====================
+let docQuery='';
+$('#docSearch').oninput=e=>{docQuery=e.target.value.trim().toLowerCase();renderDocs()};
+function renderDocs(){const list=$('#docList');let recs=DB.records;$('#cntPill').textContent=DB.records.length;
+ if(docQuery)recs=recs.filter(r=>((r.vendor||'')+' '+(r.invoiceNumber||'')+' '+(r.taxId||'')).toLowerCase().includes(docQuery));
+ if(!DB.records.length){list.innerHTML=`<div class="empty"><div class="ic">📭</div><p>ยังไม่มีเอกสาร<br>อัปโหลดใบเสร็จด้านบนเพื่อเริ่ม</p></div>`;return}
+ if(!recs.length){list.innerHTML=`<div class="empty"><div class="ic">🔍</div><p>ไม่พบเอกสารที่ค้นหา</p></div>`;return}
+ list.innerHTML=recs.map(recCardHTML).join('')}
 
 //==================== RECORD SHEET ====================
-function openRec(id){
-  const r=DB.records.find(x=>x.id===id); if(!r)return;
-  const opts=CATS.map(c=>`<option value="${c.k}" ${c.k===r.category?'selected':''}>${c.i} ${c.n}</option>`).join('');
-  const inoutUI = F('inout') ? `<div class="seg" style="margin-bottom:12px"><button id="t_exp" class="${r.type!=='income'?'on':''}">💸 รายจ่าย</button><button id="t_inc" class="${r.type==='income'?'on':''}">💵 รายรับ</button></div>`:'';
-  $('#sheet').innerHTML=`<div class="grab"></div><h3>รายละเอียดเอกสาร</h3>
-    ${r.confidence!=null?`<p class="tiny t3" style="margin-bottom:12px">ความมั่นใจ AI: ${Math.round((r.confidence||0)*100)}%${r.note?' · '+esc(r.note):''}</p>`:''}
-    ${inoutUI}
-    ${r.thumb?`<img src="${r.thumb}" style="width:100%;border-radius:12px;margin-bottom:12px;max-height:240px;object-fit:contain;background:var(--soft)">`:''}
-    <label class="fl">ชื่อร้าน/ผู้ขาย</label><input class="fc" id="e_vendor" value="${esc(r.vendor)}">
-    <div class="grid2" style="margin-top:10px">
-      <div><label class="fl">เลขผู้เสียภาษี</label><input class="fc" id="e_taxId" value="${esc(r.taxId)}"></div>
-      <div><label class="fl">เลขที่เอกสาร</label><input class="fc" id="e_inv" value="${esc(r.invoiceNumber)}"></div>
-    </div>
-    <div class="grid2" style="margin-top:10px">
-      <div><label class="fl">วันที่ (ค.ศ.)</label><input class="fc" id="e_date" type="date" value="${esc(r.date)}"></div>
-      <div><label class="fl">หมวด</label><select class="fc" id="e_cat">${opts}</select></div>
-    </div>
-    <div class="grid2" style="margin-top:10px">
-      <div><label class="fl">ก่อนภาษี</label><input class="fc" id="e_sub" type="number" value="${r.subtotal||0}"></div>
-      <div><label class="fl">VAT</label><input class="fc" id="e_vat" type="number" value="${r.vat||0}"></div>
-    </div>
-    <label class="fl" style="margin-top:10px">ยอดรวมสุทธิ</label><input class="fc" id="e_total" type="number" value="${r.total||0}">
-    ${(r.lineItems&&r.lineItems.length)?`<hr class="sp"><b class="tiny">รายการ</b><div style="margin-top:6px">${r.lineItems.map(li=>`<div class="row between tiny" style="padding:4px 0;border-bottom:1px dashed var(--line)"><span>${esc(li.name)} ×${li.qty}</span><span>${fmt(li.amount)}</span></div>`).join('')}</div>`:''}
-    <button class="btn" id="e_save" style="margin-top:16px">บันทึก</button>
-    <div class="grid2" style="margin-top:10px"><button class="btn line sm" id="e_close" style="width:100%">ปิด</button><button class="btn line sm" id="e_del" style="width:100%;color:var(--red)">ลบเอกสาร</button></div>`;
-  $('#mask').classList.add('on');
-  let curType=r.type||'expense';
-  if(F('inout')){ $('#t_exp').onclick=()=>{curType='expense';$('#t_exp').classList.add('on');$('#t_inc').classList.remove('on')}; $('#t_inc').onclick=()=>{curType='income';$('#t_inc').classList.add('on');$('#t_exp').classList.remove('on')}; }
-  $('#e_save').onclick=()=>{
-    r.vendor=$('#e_vendor').value; r.taxId=$('#e_taxId').value; r.invoiceNumber=$('#e_inv').value;
-    r.date=$('#e_date').value; r.month=(r.date||'').slice(0,7)||r.month; r.category=$('#e_cat').value;
-    r.subtotal=+$('#e_sub').value||0; r.vat=+$('#e_vat').value||0; r.total=+$('#e_total').value||0;
-    r.type = F('inout') ? curType : (r.category==='income'?'income':'expense');
-    r.status='done'; save(); closeSheet(); renderDocs(); refreshBadge(); toast('บันทึกแล้ว ✓');
-  };
-  $('#e_close').onclick=closeSheet;
-  $('#e_del').onclick=()=>{ if(confirm('ลบเอกสารนี้?')){ DB.records=DB.records.filter(x=>x.id!==id); save(); closeSheet(); renderDocs(); refreshBadge() } };
-}
-function closeSheet(){ $('#mask').classList.remove('on'); $('#sheet').innerHTML='' }
-$('#mask').onclick=e=>{ if(e.target===$('#mask')) closeSheet() };
-$('#addManual').onclick=()=>{
-  const r={id:uid(),status:'done',type:'expense',vendor:'',taxId:'',invoiceNumber:'',date:new Date().toISOString().slice(0,10),month:new Date().toISOString().slice(0,7),subtotal:0,vat:0,total:0,category:'other',lineItems:[],createdAt:Date.now()};
-  DB.records.unshift(r); save(); openRec(r.id);
-};
-
-//==================== AGGREGATION ====================
-function monthsAvailable(){ const set=new Set(DB.records.filter(r=>r.status==='done'&&r.month).map(r=>r.month)); const arr=[...set].sort().reverse(); if(!arr.length)arr.push(new Date().toISOString().slice(0,7)); return arr }
-function fillMonthSelect(sel){ const cur=sel.value; const ms=monthsAvailable(); sel.innerHTML=ms.map(m=>`<option value="${m}">${monthLabel(m)}</option>`).join(''); if(ms.includes(cur))sel.value=cur; }
-function recsOf(month){ return DB.records.filter(r=>r.status==='done'&&r.month===month) }
-const isIncome=r=>r.type==='income';
-
-//==================== CATEGORIES ====================
-function renderCats(){
-  fillMonthSelect($('#catMonth')); const m=$('#catMonth').value; const recs=recsOf(m).filter(r=>!isIncome(r));
-  const byCat={}; recs.forEach(r=>byCat[r.category||'other']=(byCat[r.category||'other']||0)+(+r.total||0));
-  const total=Object.values(byCat).reduce((a,b)=>a+b,0)||1;
-  const items=CATS.filter(c=>c.k!=='income').map(c=>({...c,v:byCat[c.k]||0})).filter(c=>c.v>0).sort((a,b)=>b.v-a.v);
-  const list=$('#catList');
-  if(!items.length){ list.innerHTML=`<div class="empty"><div class="ic">🏷️</div><p>ยังไม่มีรายจ่ายในเดือนนี้</p></div>`; return }
-  list.innerHTML=items.map(c=>{ const pct=Math.round(c.v/total*100); const n=recs.filter(r=>(r.category||'other')===c.k).length;
-    return `<div class="card" style="padding:13px"><div class="row between"><div class="row"><span style="font-size:20px">${c.i}</span><div><b>${c.n}</b><div class="tiny t3">${n} เอกสาร</div></div></div><div style="text-align:right"><b>${fmt(c.v)}</b><div class="tiny t3">${pct}%</div></div></div><div class="bar"><i style="width:${pct}%;background:${c.c}"></i></div></div>`;
-  }).join('');
-}
-$('#catMonth').onchange=renderCats;
+function openRec(id){const r=DB.records.find(x=>x.id===id);if(!r)return;
+ const opts=CATS.map(c=>`<option value="${c.k}" ${c.k===r.category?'selected':''}>${c.i} ${c.n}</option>`).join('');
+ const inoutUI=F('inout')?`<div class="seg" style="margin-bottom:12px"><button id="t_exp" class="${r.type!=='income'?'on':''}">💸 รายจ่าย</button><button id="t_inc" class="${r.type==='income'?'on':''}">💵 รายรับ</button></div>`:'';
+ $('#sheet').innerHTML=`<div class="grab"></div><h3>รายละเอียดเอกสาร</h3>
+  ${r.confidence!=null?`<p class="tiny t3" style="margin-bottom:12px">ความมั่นใจ AI: ${Math.round((r.confidence||0)*100)}%${r.note?' · '+esc(r.note):''}</p>`:''}
+  ${inoutUI}${r.thumb?`<img src="${r.thumb}" style="width:100%;border-radius:14px;margin-bottom:12px;max-height:240px;object-fit:contain;background:var(--soft)">`:''}
+  <label class="fl">ชื่อร้าน/ผู้ขาย</label><input class="fc" id="e_vendor" value="${esc(r.vendor)}">
+  <div class="grid2" style="margin-top:10px"><div><label class="fl">เลขผู้เสียภาษี</label><input class="fc" id="e_taxId" value="${esc(r.taxId)}"></div><div><label class="fl">เลขที่เอกสาร</label><input class="fc" id="e_inv" value="${esc(r.invoiceNumber)}"></div></div>
+  <div class="grid2" style="margin-top:10px"><div><label class="fl">วันที่ (ค.ศ.)</label><input class="fc" id="e_date" type="date" value="${esc(r.date)}"></div><div><label class="fl">หมวด</label><select class="fc" id="e_cat">${opts}</select></div></div>
+  <div class="grid2" style="margin-top:10px"><div><label class="fl">ก่อนภาษี</label><input class="fc" id="e_sub" type="number" value="${r.subtotal||0}"></div><div><label class="fl">VAT</label><input class="fc" id="e_vat" type="number" value="${r.vat||0}"></div></div>
+  <label class="fl" style="margin-top:10px">ยอดรวมสุทธิ</label><input class="fc" id="e_total" type="number" value="${r.total||0}">
+  ${(r.lineItems&&r.lineItems.length)?`<hr class="sp"><b class="tiny">รายการ</b><div style="margin-top:6px">${r.lineItems.map(li=>`<div class="row between tiny" style="padding:4px 0;border-bottom:1px dashed var(--line)"><span>${esc(li.name)} ×${li.qty}</span><span>${fmt(li.amount)}</span></div>`).join('')}</div>`:''}
+  <button class="btn" id="e_save" style="margin-top:16px">บันทึก</button>
+  <div class="grid2" style="margin-top:10px"><button class="btn line sm" id="e_close" style="width:100%">ปิด</button><button class="btn line sm" id="e_del" style="width:100%;color:var(--red)">ลบเอกสาร</button></div>`;
+ $('#mask').classList.add('on');let ct=r.type||'expense';
+ if(F('inout')){$('#t_exp').onclick=()=>{ct='expense';$('#t_exp').classList.add('on');$('#t_inc').classList.remove('on')};$('#t_inc').onclick=()=>{ct='income';$('#t_inc').classList.add('on');$('#t_exp').classList.remove('on')}}
+ $('#e_save').onclick=()=>{r.vendor=$('#e_vendor').value;r.taxId=$('#e_taxId').value;r.invoiceNumber=$('#e_inv').value;r.date=$('#e_date').value;r.month=(r.date||'').slice(0,7)||r.month;r.category=$('#e_cat').value;r.subtotal=+$('#e_sub').value||0;r.vat=+$('#e_vat').value||0;r.total=+$('#e_total').value||0;r.type=F('inout')?ct:(r.category==='income'?'income':'expense');r.status='done';save();closeSheet();renderDocs();if($('#pgHome').classList.contains('on'))renderHome();refreshBadge();toast('บันทึกแล้ว ✓')};
+ $('#e_close').onclick=closeSheet;
+ $('#e_del').onclick=()=>{if(confirm('ลบเอกสารนี้?')){DB.records=DB.records.filter(x=>x.id!==id);save();closeSheet();renderDocs();renderHome();refreshBadge()}}}
+function closeSheet(){$('#mask').classList.remove('on');$('#sheet').innerHTML=''}
+$('#mask').onclick=e=>{if(e.target===$('#mask'))closeSheet()};
+$('#addManual').onclick=()=>{const r={id:uid(),status:'done',type:'expense',vendor:'',taxId:'',invoiceNumber:'',date:new Date().toISOString().slice(0,10),month:new Date().toISOString().slice(0,7),subtotal:0,vat:0,total:0,category:'other',lineItems:[],createdAt:Date.now()};DB.records.unshift(r);save();openRec(r.id)};
 
 //==================== SUMMARY ====================
-function renderSum(){
-  fillMonthSelect($('#sumMonth')); const m=$('#sumMonth').value; const recs=recsOf(m);
-  const exp=recs.filter(r=>!isIncome(r)).reduce((a,r)=>a+(+r.total||0),0);
-  const inc=recs.filter(isIncome).reduce((a,r)=>a+(+r.total||0),0);
-  const vat=recs.reduce((a,r)=>a+(+r.vat||0),0);
-  const byCat={}; recs.filter(r=>!isIncome(r)).forEach(r=>byCat[r.category||'other']=(byCat[r.category||'other']||0)+(+r.total||0));
-  const top=Object.entries(byCat).sort((a,b)=>b[1]-a[1])[0];
-  const kpi=$('#kpiBox');
-  if(F('inout')){
-    kpi.innerHTML=`<div class="b"><div class="lab">รายรับ</div><div class="v tin">${fmt(inc)}</div></div>
-      <div class="b"><div class="lab">รายจ่าย</div><div class="v">${fmt(exp)}</div></div>
-      <div class="b"><div class="lab">คงเหลือสุทธิ</div><div class="v" style="color:${inc-exp>=0?'var(--green)':'var(--red)'}">${fmt(inc-exp)}</div></div>
-      <div class="b"><div class="lab">เอกสาร</div><div class="v">${recs.length}</div></div>`;
-  }else{
-    kpi.innerHTML=`<div class="b"><div class="lab">รายจ่ายรวม</div><div class="v">${fmt(exp)}</div></div>
-      <div class="b"><div class="lab">จำนวนเอกสาร</div><div class="v">${recs.length}</div></div>
-      <div class="b"><div class="lab">ภาษีซื้อ (VAT)</div><div class="v">${fmt(vat)}</div></div>
-      <div class="b"><div class="lab">หมวดสูงสุด</div><div class="v" style="font-size:15px">${top?catBy(top[0]).n:'—'}</div></div>`;
-  }
-  const total=exp||1;
-  const items=CATS.filter(c=>c.k!=='income').map(c=>({...c,v:byCat[c.k]||0})).filter(c=>c.v>0).sort((a,b)=>b.v-a.v);
-  $('#sumBars').innerHTML=items.length?`<div class="card"><b>สัดส่วนค่าใช้จ่าย</b>${items.map(c=>{const pct=Math.round(c.v/total*100);return `<div style="margin-top:11px"><div class="row between tiny"><span>${c.i} ${c.n}</span><b>${fmt(c.v)} · ${pct}%</b></div><div class="bar"><i style="width:${pct}%;background:${c.c}"></i></div></div>`}).join('')}</div>`:`<div class="empty"><div class="ic">📊</div><p>ยังไม่มีข้อมูลในเดือนนี้</p></div>`;
-  // trend
-  if(F('trend')){
-    const ms=monthsAvailable().slice(0,6).reverse();
-    const data=ms.map(mm=>({m:mm,v:recsOf(mm).filter(r=>!isIncome(r)).reduce((a,r)=>a+(+r.total||0),0)}));
-    const max=Math.max(...data.map(d=>d.v),1);
-    $('#trendBox').innerHTML=`<div class="card"><b>📈 แนวโน้มรายจ่าย</b><div class="trend">${data.map(d=>`<div class="tcol"><div class="tbar" style="height:${Math.round(d.v/max*96)+4}px"></div><span class="tiny t3">${monthLabel(d.m).split(' ')[0]}</span></div>`).join('')}</div></div>`;
-  } else $('#trendBox').innerHTML='';
-}
-$('#sumMonth').onchange=()=>{ renderSum(); $('#insightBox').innerHTML='<p class="tiny t3">กดปุ่ม "สร้างสรุป" เพื่อให้ AI วิเคราะห์เดือนนี้</p>' };
-
-$('#genInsight').onclick=async()=>{
-  if(!currentKey()){ toast('ตั้งค่าผู้ให้บริการก่อน'); goto('Set'); return }
-  const m=$('#sumMonth').value; const recs=recsOf(m);
-  if(!recs.length) return toast('ไม่มีข้อมูลในเดือนนี้');
-  const byCat={}; recs.filter(r=>!isIncome(r)).forEach(r=>byCat[catBy(r.category).n]=(byCat[catBy(r.category).n]||0)+(+r.total||0));
-  const ms=monthsAvailable(); const idx=ms.indexOf(m); const prev=ms[idx+1];
-  const prevExp=prev?recsOf(prev).filter(r=>!isIncome(r)).reduce((a,r)=>a+(+r.total||0),0):null;
-  const exp=recs.filter(r=>!isIncome(r)).reduce((a,r)=>a+(+r.total||0),0);
-  const data={เดือน:monthLabel(m),กิจการ:DB.settings.bizName||'(ไม่ระบุ)',จำนวนเอกสาร:recs.length,รายจ่ายรวม:exp,รายจ่ายเดือนก่อน:prevExp,ค่าใช้จ่ายตามหมวด:byCat};
-  $('#genInsight').innerHTML='<span class="spin"></span>';
-  const prompt=`คุณเป็นที่ปรึกษาการเงิน SME สรุปงบรายเดือนนี้เป็นภาษาคนที่ตัดสินใจได้ทันที
-ข้อมูล: ${JSON.stringify(data)}
-ตอบ JSON เท่านั้น: {"insights":[{"icon":"emoji","text":"สรุปสั้น 1 บรรทัด"}]} จำนวน 3-4 ข้อ เน้นหมวดที่ใช้มากผิดปกติ เทียบเดือนก่อน และจุดที่ควรระวัง/ประหยัด ภาษาไทยกระชับ`;
-  try{
-    const txt=await aiText(prompt);
-    const out=parseJSON(txt);
-    $('#insightBox').innerHTML=(out.insights||[]).map(i=>`<div class="ins"><span class="ic">${esc(i.icon||'•')}</span><span>${esc(i.text)}</span></div>`).join('')||'<p class="tiny t3">ไม่มีข้อมูลสรุป</p>';
-  }catch(e){ toast('สร้างสรุปไม่สำเร็จ: '+e.message) }
-  $('#genInsight').textContent='สร้างสรุป';
-};
-// text-only AI (for insights) — supports gemini/claude/openai
-async function aiText(prompt){
-  const p=DB.settings.provider;
-  if(p==='gemini'){ const k=DB.settings.keys.gemini;
-    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${DB.settings.models.gemini}:generateContent?key=${encodeURIComponent(k)}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:.3,responseMimeType:'application/json'}})});
-    const j=await r.json(); if(!r.ok)throw new Error(j.error?.message||r.status); return (j.candidates?.[0]?.content?.parts||[]).map(x=>x.text||'').join(''); }
-  if(p==='claude'){ const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:claudeHeaders(),body:JSON.stringify({model:DB.settings.models.claude,max_tokens:700,messages:[{role:'user',content:prompt}]})}); const j=await r.json(); if(!r.ok)throw new Error(j.error?.message||r.status); return (j.content||[]).filter(b=>b.type==='text').map(b=>b.text).join(''); }
-  if(p==='openai'){ const r=await fetch(DB.settings.oai.base.replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+DB.settings.keys.openai},body:JSON.stringify({model:DB.settings.models.openai,max_tokens:700,messages:[{role:'user',content:prompt}],response_format:{type:'json_object'}})}); const j=await r.json(); if(!r.ok)throw new Error(j.error?.message||r.status); return j.choices?.[0]?.message?.content||''; }
-  throw new Error('ผู้ให้บริการนี้ไม่รองรับการสรุป (ใช้ Gemini/Claude/Groq)');
-}
+$('#qaUpload').onclick=()=>$('#fab').click();
+$('#qaSum').onclick=()=>goto('Sum');
+function renderSum(){fillMonthSelect($('#sumMonth'));const m=$('#sumMonth').value,recs=recsOf(m);
+ const exp=recs.filter(r=>!isIncome(r)).reduce((a,r)=>a+(+r.total||0),0),inc=recs.filter(isIncome).reduce((a,r)=>a+(+r.total||0),0),vat=recs.reduce((a,r)=>a+(+r.vat||0),0);
+ const byCat={};recs.filter(r=>!isIncome(r)).forEach(r=>byCat[r.category]=(byCat[r.category]||0)+(+r.total||0));const top=Object.entries(byCat).sort((a,b)=>b[1]-a[1])[0];
+ $('#kpiBox').innerHTML=F('inout')
+  ?`<div class="b2"><div class="lab">รายรับ</div><div class="v tin">${fmt(inc)}</div></div><div class="b2"><div class="lab">รายจ่าย</div><div class="v">${fmt(exp)}</div></div><div class="b2"><div class="lab">คงเหลือสุทธิ</div><div class="v" style="color:${inc-exp>=0?'var(--green)':'var(--red)'}">${fmt(inc-exp)}</div></div><div class="b2"><div class="lab">เอกสาร</div><div class="v">${recs.length}</div></div>`
+  :`<div class="b2"><div class="lab">รายจ่ายรวม</div><div class="v">${fmt(exp)}</div></div><div class="b2"><div class="lab">จำนวนเอกสาร</div><div class="v">${recs.length}</div></div><div class="b2"><div class="lab">ภาษีซื้อ (VAT)</div><div class="v">${fmt(vat)}</div></div><div class="b2"><div class="lab">หมวดสูงสุด</div><div class="v" style="font-size:15px">${top?catBy(top[0]).n:'—'}</div></div>`;
+ const total=exp||1,items=CATS.filter(c=>c.k!=='income').map(c=>({...c,v:byCat[c.k]||0})).filter(c=>c.v>0).sort((a,b)=>b.v-a.v);
+ $('#sumBars').innerHTML=items.length?`<div class="card"><b>สัดส่วนค่าใช้จ่าย</b>${items.map(c=>{const pct=Math.round(c.v/total*100);return `<div style="margin-top:11px"><div class="row between tiny"><span>${c.i} ${c.n}</span><b>${fmt(c.v)} · ${pct}%</b></div><div class="bar9"><i style="width:${pct}%;background:${c.c}"></i></div></div>`}).join('')}</div>`:`<div class="empty"><div class="ic">📊</div><p>ยังไม่มีข้อมูลในเดือนนี้</p></div>`;
+ if(F('trend')){const ms=monthsAvailable().slice(0,6).reverse();const data=ms.map(mm=>({m:mm,v:recsOf(mm).filter(r=>!isIncome(r)).reduce((a,r)=>a+(+r.total||0),0)}));const mx=Math.max(...data.map(d=>d.v),1);$('#trendBox').innerHTML=`<div class="card"><b>📈 แนวโน้มรายจ่าย</b><div class="trend">${data.map(d=>`<div class="tcol"><div class="tbar" style="height:${Math.round(d.v/mx*100)}%"></div><span class="tiny t3">${monthLabel(d.m).split(' ')[0]}</span></div>`).join('')}</div></div>`}else $('#trendBox').innerHTML=''}
+$('#sumMonth').onchange=()=>{renderSum();$('#insightBox').innerHTML='<p class="tiny t3">กดปุ่ม "สร้างสรุป" เพื่อให้ AI วิเคราะห์เดือนนี้</p>'};
+$('#genInsight').onclick=async()=>{if(!currentKey()){toast('ตั้งค่าผู้ให้บริการก่อน');goto('Set');return}const m=$('#sumMonth').value,recs=recsOf(m);if(!recs.length)return toast('ไม่มีข้อมูลในเดือนนี้');const byCat={};recs.filter(r=>!isIncome(r)).forEach(r=>byCat[catBy(r.category).n]=(byCat[catBy(r.category).n]||0)+(+r.total||0));const ms=monthsAvailable(),idx=ms.indexOf(m),prev=ms[idx+1];const pExp=prev?recsOf(prev).filter(r=>!isIncome(r)).reduce((a,r)=>a+(+r.total||0),0):null;const exp=recs.filter(r=>!isIncome(r)).reduce((a,r)=>a+(+r.total||0),0);const data={เดือน:monthLabel(m),กิจการ:DB.settings.bizName||'(ไม่ระบุ)',จำนวนเอกสาร:recs.length,รายจ่ายรวม:exp,รายจ่ายเดือนก่อน:pExp,ค่าใช้จ่ายตามหมวด:byCat};$('#genInsight').innerHTML='<span class="spin"></span>';const prompt=`คุณเป็นที่ปรึกษาการเงิน SME สรุปงบรายเดือนนี้เป็นภาษาคนที่ตัดสินใจได้ทันที\nข้อมูล: ${JSON.stringify(data)}\nตอบ JSON เท่านั้น: {"insights":[{"icon":"emoji","text":"สรุปสั้น 1 บรรทัด"}]} จำนวน 3-4 ข้อ เน้นหมวดที่ใช้มากผิดปกติ เทียบเดือนก่อน และจุดที่ควรระวัง/ประหยัด ภาษาไทยกระชับ`;try{const txt=await aiText(prompt);const out=parseJSON(txt);$('#insightBox').innerHTML=(out.insights||[]).map(i=>`<div class="ins"><span class="ic">${esc(i.icon||'•')}</span><span>${esc(i.text)}</span></div>`).join('')||'<p class="tiny t3">ไม่มีข้อมูลสรุป</p>'}catch(e){toast('สร้างสรุปไม่สำเร็จ: '+e.message)}$('#genInsight').textContent='สร้างสรุป'};
+async function aiText(prompt){const p=DB.settings.provider;if(p==='gemini'){const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${DB.settings.models.gemini}:generateContent?key=${encodeURIComponent(DB.settings.keys.gemini)}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:.3,responseMimeType:'application/json'}})});const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);return(j.candidates?.[0]?.content?.parts||[]).map(x=>x.text||'').join('')}if(p==='claude'){const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:claudeHeaders(),body:JSON.stringify({model:DB.settings.models.claude,max_tokens:700,messages:[{role:'user',content:prompt}]})});const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);return(j.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('')}if(p==='openai'){const r=await fetch(DB.settings.oai.base.replace(/\/$/,'')+'/chat/completions',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+DB.settings.keys.openai},body:JSON.stringify({model:DB.settings.models.openai,max_tokens:700,messages:[{role:'user',content:prompt}],response_format:{type:'json_object'}})});const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);return j.choices?.[0]?.message?.content||''}throw new Error('ผู้ให้บริการนี้ไม่รองรับการสรุป (ใช้ Gemini/Claude/Groq)')}
 
 //==================== AUDIT ====================
-function computeAudit(){
-  const recs=DB.records.filter(r=>r.status==='done'); const issues=[]; recs.forEach(r=>r._flag=null);
-  const seen={};
-  recs.forEach(r=>{ const key=(r.invoiceNumber&&r.invoiceNumber.trim())?'inv:'+r.invoiceNumber.trim():'vdt:'+(r.vendor||'')+'|'+(r.date||'')+'|'+(r.total||0);
-    if(seen[key]){ r._flag='dup'; seen[key]._flag='dup'; issues.push({type:'dup',title:'เอกสารซ้ำ',desc:`${r.vendor||'?'} · ${r.invoiceNumber||r.date} (${fmt(r.total)})`,ids:[seen[key].id,r.id]}); } else seen[key]=r; });
-  recs.forEach(r=>{ const miss=[]; if(!r.taxId||!r.taxId.trim())miss.push('เลขผู้เสียภาษี'); if(!r.invoiceNumber||!r.invoiceNumber.trim())miss.push('เลขที่เอกสาร'); if(!r.date||!r.date.trim())miss.push('วันที่'); if(!r.total)miss.push('ยอดเงิน');
-    if(miss.length) issues.push({type:'miss',title:'ข้อมูลไม่ครบ',desc:`${r.vendor||'ไม่ทราบชื่อ'} ขาด: ${miss.join(', ')}`,ids:[r.id]}); });
-  recs.forEach(r=>{ if(r.subtotal&&r.vat&&r.total&&Math.abs((r.subtotal+r.vat)-r.total)>1) issues.push({type:'amt',title:'ยอดไม่ตรง',desc:`${r.vendor||'?'}: ก่อนภาษี+VAT (${fmt(r.subtotal+r.vat)}) ≠ ยอดรวม (${fmt(r.total)})`,ids:[r.id]}); });
-  return issues;
-}
-function renderAudit(){
-  if(!F('audit')){ $('#auditList').innerHTML=`<div class="empty"><div class="ic">🔕</div><p>ปิดการตรวจสอบอัตโนมัติอยู่<br>เปิดได้ที่ ตั้งค่า → ฟีเจอร์เสริม</p></div>`; return }
-  const issues=computeAudit(); const list=$('#auditList');
-  if(!issues.length){ list.innerHTML=`<div class="card" style="border-color:#bfe7d4;background:#f3fbf7"><div class="row"><span style="font-size:22px">✅</span><div><b style="color:var(--green)">พร้อมปิดงวดบัญชี</b><div class="tiny t3">ไม่พบเอกสารซ้ำหรือข้อมูลขาด</div></div></div></div>`; return }
-  const map={dup:{i:'🔁',c:'flag dup',n:'ซ้ำ'},miss:{i:'📋',c:'flag miss',n:'ขาด'},amt:{i:'⚖️',c:'flag miss',n:'ยอด'}};
-  list.innerHTML=`<div class="card" style="border-color:#f3d089;background:#fffaf0"><b style="color:#b9820a">พบ ${issues.length} รายการที่ควรตรวจ</b></div>`+issues.map(is=>{const mp=map[is.type];return `<div class="rec" onclick="openRec('${is.ids[is.ids.length-1]}')"><div class="row" style="align-items:flex-start"><span style="font-size:20px">${mp.i}</span><div class="grow"><div class="row between"><b>${is.title}</b><span class="${mp.c}">${mp.n}</span></div><div class="tiny muted" style="margin-top:3px">${esc(is.desc)}</div></div></div></div>`}).join('');
-}
-function refreshBadge(){ const b=$('#auditBadge'); const n=F('audit')?computeAudit().length:0; if(n){b.textContent=n;b.style.display='flex'}else b.style.display='none'; renderDocs(); }
+function computeAudit(){const recs=DB.records.filter(r=>r.status==='done');const issues=[];recs.forEach(r=>r._flag=null);const seen={};
+ recs.forEach(r=>{const key=(r.invoiceNumber&&r.invoiceNumber.trim())?'inv:'+r.invoiceNumber.trim():'vdt:'+(r.vendor||'')+'|'+(r.date||'')+'|'+(r.total||0);if(seen[key]){r._flag='dup';seen[key]._flag='dup';issues.push({type:'dup',title:'เอกสารซ้ำ',desc:`${r.vendor||'?'} · ${r.invoiceNumber||r.date} (${fmt(r.total)})`,ids:[seen[key].id,r.id]})}else seen[key]=r});
+ recs.forEach(r=>{const miss=[];if(!r.taxId||!r.taxId.trim())miss.push('เลขผู้เสียภาษี');if(!r.invoiceNumber||!r.invoiceNumber.trim())miss.push('เลขที่เอกสาร');if(!r.date||!r.date.trim())miss.push('วันที่');if(!r.total)miss.push('ยอดเงิน');if(miss.length)issues.push({type:'miss',title:'ข้อมูลไม่ครบ',desc:`${r.vendor||'ไม่ทราบชื่อ'} ขาด: ${miss.join(', ')}`,ids:[r.id]})});
+ recs.forEach(r=>{if(r.subtotal&&r.vat&&r.total&&Math.abs((r.subtotal+r.vat)-r.total)>1)issues.push({type:'amt',title:'ยอดไม่ตรง',desc:`${r.vendor||'?'}: ก่อนภาษี+VAT (${fmt(r.subtotal+r.vat)}) ≠ ยอดรวม (${fmt(r.total)})`,ids:[r.id]})});
+ return issues}
+function renderAudit(){if(!F('audit')){$('#auditList').innerHTML=`<div class="empty"><div class="ic">🔕</div><p>ปิดการตรวจสอบอัตโนมัติอยู่<br>เปิดได้ที่ ตั้งค่า → ฟีเจอร์เสริม</p></div>`;return}const issues=computeAudit(),list=$('#auditList');if(!issues.length){list.innerHTML=`<div class="card" style="border-color:#bfe7d4;background:#f1fbf6"><div class="row"><span style="font-size:22px">✅</span><div><b style="color:var(--green)">พร้อมปิดงวดบัญชี</b><div class="tiny t3">ไม่พบเอกสารซ้ำหรือข้อมูลขาด</div></div></div></div>`;return}const map={dup:{i:'🔁',c:'flag dup',n:'ซ้ำ'},miss:{i:'📋',c:'flag miss',n:'ขาด'},amt:{i:'⚖️',c:'flag miss',n:'ยอด'}};list.innerHTML=`<div class="card" style="border-color:#f3d089;background:#fffaf0"><b style="color:#b9820a">พบ ${issues.length} รายการที่ควรตรวจ</b></div>`+issues.map(is=>{const mp=map[is.type];return `<div class="rec" onclick="openRec('${is.ids[is.ids.length-1]}')"><div class="row" style="align-items:flex-start"><span style="font-size:20px">${mp.i}</span><div class="grow"><div class="row between"><b>${is.title}</b><span class="${mp.c}">${mp.n}</span></div><div class="tiny muted" style="margin-top:3px">${esc(is.desc)}</div></div></div></div>`}).join('')}
+function refreshBadge(){const b=$('#auditBadge'),n=F('audit')?computeAudit().length:0;if(n){b.textContent=n;b.style.display='flex'}else b.style.display='none';renderDocs()}
 
-//==================== EXCEL EXPORT ====================
-function loadXLSX(){ return new Promise((res,rej)=>{ if(window.XLSX)return res(); const s=document.createElement('script'); s.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s); }) }
-async function exportExcel(){
-  const recs=DB.records.filter(r=>r.status==='done');
-  if(!recs.length) return toast('ยังไม่มีข้อมูลให้ส่งออก');
-  try{ await loadXLSX(); }catch(e){ return exportCSV(recs); }
-  const rows=recs.slice().sort((a,b)=>(a.date||'').localeCompare(b.date||'')).map(r=>({
-    'วันที่':r.date||'','ประเภท':r.type==='income'?'รายรับ':'รายจ่าย','ชื่อร้าน/ผู้ขาย':r.vendor||'',
-    'เลขผู้เสียภาษี':r.taxId||'','เลขที่เอกสาร':r.invoiceNumber||'','หมวด':catBy(r.category).n,
-    'ก่อนภาษี':r.subtotal||0,'VAT':r.vat||0,'ยอดรวม':r.total||0,'หมายเหตุ':r.note||''}));
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), 'เอกสาร');
-  // summary by month+category
-  const sum={}; recs.forEach(r=>{ const key=r.month+'|'+catBy(r.category).n; sum[key]=(sum[key]||0)+(+r.total||0); });
-  const srows=Object.entries(sum).map(([k,v])=>{const [mo,cat]=k.split('|');return {'เดือน':monthLabel(mo),'หมวด':cat,'รวม':v}});
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(srows.length?srows:[{'เดือน':'','หมวด':'','รวม':0}]), 'สรุปตามหมวด');
-  const name=(DB.settings.bizName?DB.settings.bizName+'-':'')+'บัญชีAI-'+new Date().toISOString().slice(0,10)+'.xlsx';
-  XLSX.writeFile(wb, name); toast('ส่งออก Excel แล้ว ✓');
-}
-function exportCSV(recs){
-  const head=['วันที่','ประเภท','ชื่อร้าน','เลขผู้เสียภาษี','เลขที่เอกสาร','หมวด','ก่อนภาษี','VAT','ยอดรวม','หมายเหตุ'];
-  const lines=[head.join(',')].concat(recs.map(r=>[r.date,r.type==='income'?'รายรับ':'รายจ่าย',r.vendor,r.taxId,r.invoiceNumber,catBy(r.category).n,r.subtotal,r.vat,r.total,(r.note||'').replace(/,/g,' ')].map(x=>`"${String(x==null?'':x).replace(/"/g,'""')}"`).join(',')));
-  const blob=new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='บัญชีAI-'+new Date().toISOString().slice(0,10)+'.csv'; a.click(); toast('ส่งออก CSV แล้ว (เปิดด้วย Excel ได้)');
-}
-$('#xlsBtn').onclick=exportExcel; $('#xlsBtn2').onclick=exportExcel;
+//==================== EXCEL ====================
+function loadXLSX(){return new Promise((res,rej)=>{if(window.XLSX)return res();const s=document.createElement('script');s.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
+async function exportExcel(){const recs=DB.records.filter(r=>r.status==='done');if(!recs.length)return toast('ยังไม่มีข้อมูลให้ส่งออก');try{await loadXLSX()}catch(e){return exportCSV(recs)}const rows=recs.slice().sort((a,b)=>(a.date||'').localeCompare(b.date||'')).map(r=>({'วันที่':r.date||'','ประเภท':r.type==='income'?'รายรับ':'รายจ่าย','ชื่อร้าน/ผู้ขาย':r.vendor||'','เลขผู้เสียภาษี':r.taxId||'','เลขที่เอกสาร':r.invoiceNumber||'','หมวด':catBy(r.category).n,'ก่อนภาษี':r.subtotal||0,'VAT':r.vat||0,'ยอดรวม':r.total||0,'หมายเหตุ':r.note||''}));const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'เอกสาร');const sum={};recs.forEach(r=>{const k=r.month+'|'+catBy(r.category).n;sum[k]=(sum[k]||0)+(+r.total||0)});const srows=Object.entries(sum).map(([k,v])=>{const[mo,cat]=k.split('|');return{'เดือน':monthLabel(mo),'หมวด':cat,'รวม':v}});XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(srows.length?srows:[{'เดือน':'','หมวด':'','รวม':0}]),'สรุปตามหมวด');XLSX.writeFile(wb,(DB.settings.bizName?DB.settings.bizName+'-':'')+'บัญชีAI-'+new Date().toISOString().slice(0,10)+'.xlsx');toast('ส่งออก Excel แล้ว ✓')}
+function exportCSV(recs){const head=['วันที่','ประเภท','ชื่อร้าน','เลขผู้เสียภาษี','เลขที่เอกสาร','หมวด','ก่อนภาษี','VAT','ยอดรวม','หมายเหตุ'];const lines=[head.join(',')].concat(recs.map(r=>[r.date,r.type==='income'?'รายรับ':'รายจ่าย',r.vendor,r.taxId,r.invoiceNumber,catBy(r.category).n,r.subtotal,r.vat,r.total,(r.note||'').replace(/,/g,' ')].map(x=>`"${String(x==null?'':x).replace(/"/g,'""')}"`).join(',')));const blob=new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='บัญชีAI-'+new Date().toISOString().slice(0,10)+'.csv';a.click();toast('ส่งออก CSV แล้ว (เปิดด้วย Excel ได้)')}
+$('#xlsBtn').onclick=exportExcel;$('#xlsBtn2').onclick=exportExcel;$('#qaXls').onclick=exportExcel;
 
 //==================== DATA IO ====================
-$('#expData').onclick=()=>{ const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='บัญชีAI-สำรอง-'+new Date().toISOString().slice(0,10)+'.json'; a.click(); toast('สำรองแล้ว ✓'); };
+$('#expData').onclick=()=>{const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='บัญชีAI-สำรอง-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('สำรองแล้ว ✓')};
 $('#impData').onclick=()=>$('#impFile').click();
-$('#impFile').onchange=e=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ try{ const d=JSON.parse(r.result); if(d.records){ DB=migrate(d); save(); loadSet(); renderDocs(); refreshBadge(); toast('กู้คืนสำเร็จ ✓') } else toast('ไฟล์ไม่ถูกต้อง') }catch(err){ toast('อ่านไฟล์ไม่ได้') } }; r.readAsText(f); e.target.value=''; };
-$('#clrData').onclick=()=>{ if(confirm('ล้างข้อมูลทั้งหมด? กู้คืนไม่ได้')){ const keep=DB.settings; DB=def(); DB.settings=keep; save(); renderDocs(); refreshBadge(); toast('ล้างข้อมูลแล้ว') } };
+$('#impFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d.records){DB=migrate(d);save();loadSet();renderDocs();renderHome();refreshBadge();toast('กู้คืนสำเร็จ ✓')}else toast('ไฟล์ไม่ถูกต้อง')}catch(err){toast('อ่านไฟล์ไม่ได้')}};r.readAsText(f);e.target.value=''};
+$('#clrData').onclick=()=>{if(confirm('ล้างข้อมูลทั้งหมด? กู้คืนไม่ได้')){const keep=DB.settings;DB=def();DB.settings=keep;save();renderDocs();renderHome();refreshBadge();toast('ล้างข้อมูลแล้ว')}};
 
-//==================== PIN LOCK ====================
-let pinBuf='';
-function buildPad(){ const pad=$('#pad'); pad.innerHTML=''; ['1','2','3','4','5','6','7','8','9','','0','⌫'].forEach(d=>{ const b=document.createElement('button'); b.textContent=d; if(d==='')b.style.visibility='hidden'; b.onclick=()=>onPin(d); pad.appendChild(b); }); }
-function drawDots(len){ $('#pinDots').innerHTML=Array.from({length:Math.max(4,len)}).map((_,i)=>`<i class="${i<pinBuf.length?'f':''}"></i>`).join('') }
-let pinMode='unlock', pinFirst='';
-function onPin(d){
-  if(d==='⌫'){ pinBuf=pinBuf.slice(0,-1); drawDots(pinFirst?pinFirst.length:4); return }
-  if(d==='')return; pinBuf+=d; drawDots(pinFirst?pinFirst.length:4);
-  const need = pinMode==='set'? (pinFirst?pinFirst.length:4) : (DB.settings.pin.length||4);
-  if(pinBuf.length>=need){
-    if(pinMode==='unlock'){ if(pinBuf===DB.settings.pin){ $('#lock').classList.remove('on'); pinBuf=''; } else { pinBuf=''; drawDots(4); navigator.vibrate?.(120); toast('PIN ไม่ถูกต้อง'); } }
-    else if(pinMode==='set'){ if(!pinFirst){ pinFirst=pinBuf; pinBuf=''; drawDots(pinFirst.length); $('#lock b').textContent='ยืนยัน PIN อีกครั้ง'; } else { if(pinBuf===pinFirst){ DB.settings.pin=pinBuf; save(); $('#lock').classList.remove('on'); toast('ตั้ง PIN แล้ว ✓'); } else { pinFirst='';pinBuf=''; $('#lock b').textContent='ไม่ตรงกัน ลองใหม่'; drawDots(4); } } }
-  }
-}
-function setupPin(){ pinMode='set'; pinFirst=''; pinBuf=''; $('#lock b').textContent='ตั้งรหัส PIN ใหม่'; buildPad(); drawDots(4); $('#lock').classList.add('on'); }
-function lockApp(){ if(F('pin')&&DB.settings.pin){ pinMode='unlock'; pinBuf=''; $('#lock b').textContent='ใส่รหัส PIN'; buildPad(); drawDots(DB.settings.pin.length); $('#lock').classList.add('on'); } }
+//==================== PIN ====================
+let pinBuf='',pinMode='unlock',pinFirst='';
+function buildPad(){const pad=$('#kpad');pad.innerHTML='';['1','2','3','4','5','6','7','8','9','','0','⌫'].forEach(d=>{const b=document.createElement('button');b.textContent=d;if(d==='')b.style.visibility='hidden';b.onclick=()=>onPin(d);pad.appendChild(b)})}
+function drawDots(){$('#pinDots').innerHTML=Array.from({length:Math.max(4,pinFirst?pinFirst.length:(DB.settings.pin.length||4))}).map((_,i)=>`<i class="${i<pinBuf.length?'f':''}"></i>`).join('')}
+function onPin(d){if(d==='⌫'){pinBuf=pinBuf.slice(0,-1);drawDots();return}if(d==='')return;pinBuf+=d;drawDots();const need=pinMode==='set'?(pinFirst?pinFirst.length:4):(DB.settings.pin.length||4);if(pinBuf.length>=need){if(pinMode==='unlock'){if(pinBuf===DB.settings.pin){$('#lock').classList.remove('on');pinBuf=''}else{pinBuf='';drawDots();navigator.vibrate?.(120);toast('PIN ไม่ถูกต้อง')}}else{if(!pinFirst){pinFirst=pinBuf;pinBuf='';drawDots();$('#lock b').textContent='ยืนยัน PIN อีกครั้ง'}else{if(pinBuf===pinFirst){DB.settings.pin=pinBuf;save();$('#lock').classList.remove('on');toast('ตั้ง PIN แล้ว ✓')}else{pinFirst='';pinBuf='';$('#lock b').textContent='ไม่ตรงกัน ลองใหม่';drawDots()}}}}}
+function setupPin(){pinMode='set';pinFirst='';pinBuf='';$('#lock b').textContent='ตั้งรหัส PIN ใหม่';buildPad();drawDots();$('#lock').classList.add('on')}
+function lockApp(){if(F('pin')&&DB.settings.pin){pinMode='unlock';pinBuf='';$('#lock b').textContent='ใส่รหัส PIN';buildPad();drawDots();$('#lock').classList.add('on')}}
 
 //==================== INIT ====================
-loadSet(); renderDocs(); refreshBadge(); lockApp();
+loadSet();renderHome();renderDocs();refreshBadge();lockApp();
 </script>
 </body>
 </html>
