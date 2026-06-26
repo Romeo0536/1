@@ -325,8 +325,18 @@ hr.sp{border:0;border-top:1px solid var(--line);margin:12px 0}
       </div>
 
       <div class="card">
+        <div class="row between"><b>☁️ ซิงค์ข้ามเครื่อง (มือถือ ↔ คอม)</b><span class="row" style="gap:6px"><i id="syncDot" style="width:9px;height:9px;border-radius:50%;background:var(--ink3);display:inline-block"></i><span class="tiny t3" id="syncStat">ยังไม่ตั้งค่า</span></span></div>
+        <p class="tiny t3" style="margin:6px 0 10px">ใส่ URL + รหัสซิงค์เดียวกันทุกเครื่อง ข้อมูลจะเชื่อมกันอัตโนมัติ · <b>ข้อมูลถูกเข้ารหัสด้วยรหัสซิงค์ก่อนอัปโหลด</b></p>
+        <label class="fl">Firebase Database URL</label><input class="fc" id="syncUrl" placeholder="https://xxxx-default-rtdb.firebaseio.com" autocomplete="off">
+        <label class="fl" style="margin-top:10px">รหัสซิงค์ (ตั้งเอง · ใช้เป็นรหัสลับด้วย)</label><input class="fc" id="syncCode" type="password" placeholder="เช่น my-shop-2569-x7k" autocomplete="off">
+        <div class="tog" style="margin-top:8px"><div class="lab"><b>🔄 ซิงค์อัตโนมัติ</b><span>อัปโหลดเมื่อมีการเปลี่ยน + ดึงเมื่อเปิดแอป</span></div><div class="sw" id="syncAuto"></div></div>
+        <div class="grid2" style="margin-top:10px"><button class="btn line sm" id="syncPull" style="width:100%">⬇ ดึงจากคลาวด์</button><button class="btn line sm" id="syncPush" style="width:100%">⬆ อัปโหลดขึ้นคลาวด์</button></div>
+        <details style="margin-top:10px"><summary class="tiny t3" style="cursor:pointer">📖 วิธีตั้ง Firebase (ฟรี ครั้งเดียว)</summary><ol class="tiny t3" style="margin:8px 0 0;padding-left:18px;line-height:1.7"><li>เข้า console.firebase.google.com → Add project (ตั้งชื่ออะไรก็ได้)</li><li>เมนู Build → Realtime Database → Create Database → เลือกที่ตั้ง → เริ่มแบบ <b>Test mode</b></li><li>คัดลอก URL ที่ขึ้นต้น https://...firebaseio.com มาวางช่องบน</li><li>ตั้งรหัสซิงค์ที่เดายาก แล้วใส่เหมือนกันทุกเครื่อง</li></ol><p class="tiny t3" style="margin:6px 0 0">* ข้อมูลเข้ารหัสฝั่งเราก่อนส่ง คนอื่นถึงเห็น URL ก็อ่านไม่ได้ถ้าไม่มีรหัสซิงค์</p></details>
+      </div>
+
+      <div class="card">
         <b>📦 ข้อมูล & ส่งออก</b>
-        <p class="tiny t3" style="margin:6px 0 12px">ข้อมูลทั้งหมดเก็บบนเครื่องคุณ ไม่ออกไปไหน</p>
+        <p class="tiny t3" style="margin:6px 0 12px">ข้อมูลทั้งหมดเก็บบนเครื่องคุณ ไม่ออกไปไหน (ถ้าไม่เปิดซิงค์)</p>
         <button class="btn green" id="xlsBtn2">⬇ ส่งออก Excel (.xlsx)</button>
         <div class="grid2" style="margin-top:10px"><button class="btn line sm" id="expData" style="width:100%">สำรอง (JSON)</button><button class="btn line sm" id="impData" style="width:100%">กู้คืน</button></div>
         <input type="file" id="impFile" accept="application/json" hidden>
@@ -367,8 +377,9 @@ const OAI_PRESETS={
 const LS='acctai_v2';
 let DB=load();
 function load(){try{return migrate(JSON.parse(localStorage.getItem(LS))||JSON.parse(localStorage.getItem('acctai_v1'))||def())}catch(e){return def()}}
-function def(){return{companies:[{id:uid(),name:'บริษัทของฉัน',records:[]}],activeCompany:null,settings:{provider:'gemini',keys:{gemini:'',openai:'',claude:'',iapp:''},models:{gemini:'gemini-2.0-flash',openai:OAI_PRESETS.groq.model,claude:'claude-opus-4-8'},oai:{preset:'groq',base:OAI_PRESETS.groq.base},features:{dark:false,inout:false,trend:true,audit:true,pin:false},pin:''}}}
-function migrate(d){const b=def();d.settings=Object.assign({},b.settings,d.settings||{});d.settings.keys=Object.assign({},b.settings.keys,d.settings.keys||{});d.settings.models=Object.assign({},b.settings.models,d.settings.models||{});d.settings.oai=Object.assign({},b.settings.oai,d.settings.oai||{});d.settings.features=Object.assign({},b.settings.features,d.settings.features||{});if(d.settings.apiKey&&!d.settings.keys.claude)d.settings.keys.claude=d.settings.apiKey;
+function def(){return{companies:[{id:uid(),name:'บริษัทของฉัน',records:[]}],activeCompany:null,tomb:{},_updatedAt:0,settings:{provider:'gemini',keys:{gemini:'',openai:'',claude:'',iapp:''},models:{gemini:'gemini-2.0-flash',openai:OAI_PRESETS.groq.model,claude:'claude-opus-4-8'},oai:{preset:'groq',base:OAI_PRESETS.groq.base},sync:{url:'',code:'',auto:false},features:{dark:false,inout:false,trend:true,audit:true,pin:false},pin:''}}}
+function migrate(d){const b=def();d.settings=Object.assign({},b.settings,d.settings||{});d.settings.keys=Object.assign({},b.settings.keys,d.settings.keys||{});d.settings.models=Object.assign({},b.settings.models,d.settings.models||{});d.settings.oai=Object.assign({},b.settings.oai,d.settings.oai||{});d.settings.sync=Object.assign({},b.settings.sync,d.settings.sync||{});d.settings.features=Object.assign({},b.settings.features,d.settings.features||{});if(d.settings.apiKey&&!d.settings.keys.claude)d.settings.keys.claude=d.settings.apiKey;
+ if(!d.tomb)d.tomb={};if(!d._updatedAt)d._updatedAt=0;
  // migrate single-company (v2) -> multi-company
  if(!Array.isArray(d.companies)){d.companies=[{id:uid(),name:d.settings.bizName||'บริษัทของฉัน',records:d.records||[]}]}
  delete d.records; delete d.settings.bizName;
@@ -376,7 +387,7 @@ function migrate(d){const b=def();d.settings=Object.assign({},b.settings,d.setti
  d.companies.forEach(c=>{if(!c.id)c.id=uid();c.records=(c.records||[]).map(r=>({type:'expense',...r}))});
  if(!d.activeCompany||!d.companies.some(c=>c.id===d.activeCompany))d.activeCompany=d.companies[0].id;
  return d}
-function save(){localStorage.setItem(LS,JSON.stringify(DB))}
+function save(){DB._updatedAt=Date.now();localStorage.setItem(LS,JSON.stringify(DB));schedulePush()}
 function CO(){return DB.companies.find(c=>c.id===DB.activeCompany)||DB.companies[0]}
 function recs(){return CO().records}
 
@@ -403,8 +414,8 @@ $('#greet').style.cursor='pointer';$('#greet').onclick=openCompanies;$('#mgrCo')
 //==================== COMPANIES ====================
 function switchCompany(id){DB.activeCompany=id;docQuery='';if($('#docSearch'))$('#docSearch').value='';save();loadSet();renderHome();renderDocs();refreshBadge();closeSheet();toast('สลับไป '+CO().name)}
 function addCompany(){const nm=(prompt('ชื่อบริษัทใหม่:')||'').trim();if(!nm)return;const c={id:uid(),name:nm,records:[]};DB.companies.push(c);DB.activeCompany=c.id;save();loadSet();renderHome();renderDocs();refreshBadge();openCompanies();toast('เพิ่ม '+nm+' แล้ว ✓')}
-function renameCompany(id){const c=DB.companies.find(x=>x.id===id);if(!c)return;const nm=(prompt('เปลี่ยนชื่อบริษัท:',c.name)||'').trim();if(!nm)return;c.name=nm;save();loadSet();renderHome();openCompanies()}
-function delCompany(id){if(DB.companies.length<=1)return toast('ต้องมีอย่างน้อย 1 บริษัท');const c=DB.companies.find(x=>x.id===id);if(!confirm('ลบบริษัท "'+c.name+'" และเอกสารทั้งหมด?'))return;DB.companies=DB.companies.filter(x=>x.id!==id);if(DB.activeCompany===id)DB.activeCompany=DB.companies[0].id;save();loadSet();renderHome();renderDocs();refreshBadge();openCompanies();toast('ลบแล้ว')}
+function renameCompany(id){const c=DB.companies.find(x=>x.id===id);if(!c)return;const nm=(prompt('เปลี่ยนชื่อบริษัท:',c.name)||'').trim();if(!nm)return;c.name=nm;c._updatedAt=Date.now();save();loadSet();renderHome();openCompanies()}
+function delCompany(id){if(DB.companies.length<=1)return toast('ต้องมีอย่างน้อย 1 บริษัท');const c=DB.companies.find(x=>x.id===id);if(!confirm('ลบบริษัท "'+c.name+'" และเอกสารทั้งหมด?'))return;(c.records||[]).forEach(r=>tombstone('rec',r.id));tombstone('co',id);DB.companies=DB.companies.filter(x=>x.id!==id);if(DB.activeCompany===id)DB.activeCompany=DB.companies[0].id;save();loadSet();renderHome();renderDocs();refreshBadge();openCompanies();toast('ลบแล้ว')}
 function openCompanies(){
  $('#sheet').innerHTML=`<div class="grab"></div><h3>🏢 บริษัทของคุณ</h3><p class="tiny t3" style="margin-bottom:12px">ข้อมูลเอกสารแยกตามบริษัท · การตั้งค่า AI ใช้ร่วมกัน</p>`+
   DB.companies.map(c=>{const n=c.records.filter(r=>r.status==='done').length;const on=c.id===DB.activeCompany;
@@ -420,7 +431,8 @@ function loadSet(){const s=DB.settings;
  $('#provider').value=s.provider;$('#k_gemini').value=s.keys.gemini;$('#m_gemini').value=s.models.gemini;
  $('#k_openai').value=s.keys.openai;$('#m_openai').value=s.models.openai;$('#oaiPreset').value=s.oai.preset;$('#oaiBase').value=s.oai.base;$('#oaiHint').textContent=OAI_PRESETS[s.oai.preset].hint;
  $('#k_claude').value=s.keys.claude;$('#m_claude').value=s.models.claude;$('#k_iapp').value=s.keys.iapp;$('#bizName').value=CO().name;
- document.querySelectorAll('.sw').forEach(sw=>sw.classList.toggle('on',!!s.features[sw.dataset.ft]));
+ document.querySelectorAll('.sw[data-ft]').forEach(sw=>sw.classList.toggle('on',!!s.features[sw.dataset.ft]));
+ $('#syncUrl').value=s.sync.url;$('#syncCode').value=s.sync.code;$('#syncAuto').classList.toggle('on',!!s.sync.auto);setSyncDot(syncReady()?(s.sync.auto?'ok':'idle'):'idle');
  showProvider();applyTheme();$('#noKey').style.display=currentKey()?'none':'block';
  $('#greet').innerHTML=esc(CO().name)+' <span style="opacity:.85">▾</span>';$('#hdSub').textContent='ผู้ให้บริการ: '+provName();
 }
@@ -428,8 +440,11 @@ function provName(){const p=DB.settings.provider;if(p==='openai')return DB.setti
 function currentKey(){const s=DB.settings;return{gemini:s.keys.gemini,openai:s.keys.openai,claude:s.keys.claude,iapp:s.keys.iapp}[s.provider]}
 function applyTheme(){document.body.classList.toggle('dark',!!DB.settings.features.dark)}
 $('#provider').onchange=showProvider;$('#oaiPreset').onchange=applyPreset;
-document.querySelectorAll('.sw').forEach(sw=>sw.onclick=()=>{const k=sw.dataset.ft;DB.settings.features[k]=!DB.settings.features[k];sw.classList.toggle('on',DB.settings.features[k]);save();if(k==='dark')applyTheme();if(k==='pin'&&DB.settings.features[k]&&!DB.settings.pin)setupPin();if(k==='audit')refreshBadge()});
-$('#saveSet').onclick=()=>{const s=DB.settings;s.provider=$('#provider').value;s.keys.gemini=$('#k_gemini').value.trim();s.models.gemini=$('#m_gemini').value;s.keys.openai=$('#k_openai').value.trim();s.models.openai=$('#m_openai').value.trim();s.oai.preset=$('#oaiPreset').value;s.oai.base=$('#oaiBase').value.trim();s.keys.claude=$('#k_claude').value.trim();s.models.claude=$('#m_claude').value;s.keys.iapp=$('#k_iapp').value.trim();const nm=$('#bizName').value.trim();if(nm)CO().name=nm;save();loadSet();renderHome();toast('บันทึกแล้ว ✓')};
+document.querySelectorAll('.sw[data-ft]').forEach(sw=>sw.onclick=()=>{const k=sw.dataset.ft;DB.settings.features[k]=!DB.settings.features[k];sw.classList.toggle('on',DB.settings.features[k]);save();if(k==='dark')applyTheme();if(k==='pin'&&DB.settings.features[k]&&!DB.settings.pin)setupPin();if(k==='audit')refreshBadge()});
+$('#saveSet').onclick=()=>{const s=DB.settings;s.provider=$('#provider').value;s.keys.gemini=$('#k_gemini').value.trim();s.models.gemini=$('#m_gemini').value;s.keys.openai=$('#k_openai').value.trim();s.models.openai=$('#m_openai').value.trim();s.oai.preset=$('#oaiPreset').value;s.oai.base=$('#oaiBase').value.trim();s.keys.claude=$('#k_claude').value.trim();s.models.claude=$('#m_claude').value;s.keys.iapp=$('#k_iapp').value.trim();s.sync.url=$('#syncUrl').value.trim();s.sync.code=$('#syncCode').value.trim();const nm=$('#bizName').value.trim();if(nm)CO().name=nm;save();loadSet();renderHome();toast('บันทึกแล้ว ✓')};
+$('#syncAuto').onclick=async()=>{DB.settings.sync.url=$('#syncUrl').value.trim();DB.settings.sync.code=$('#syncCode').value.trim();const on=!DB.settings.sync.auto;if(on&&!syncReady()){toast('ใส่ URL และรหัสซิงค์ก่อน');return}DB.settings.sync.auto=on;$('#syncAuto').classList.toggle('on',on);save();if(on){toast('เปิดซิงค์อัตโนมัติ — กำลังเชื่อม…');try{const got=await cloudPull();await cloudPush();setSyncDot('ok');toast(got?'ซิงค์ข้อมูลแล้ว ✓':'ตั้งค่าซิงค์สำเร็จ ✓')}catch(e){setSyncDot('err');toast('ซิงค์ไม่สำเร็จ: '+e.message)}}else setSyncDot('idle')};
+$('#syncPush').onclick=async()=>{DB.settings.sync.url=$('#syncUrl').value.trim();DB.settings.sync.code=$('#syncCode').value.trim();if(!syncReady())return toast('ใส่ URL และรหัสซิงค์ก่อน');save();try{await cloudPush();setSyncDot('ok');toast('อัปโหลดขึ้นคลาวด์แล้ว ✓')}catch(e){setSyncDot('err');toast(e.message)}};
+$('#syncPull').onclick=async()=>{DB.settings.sync.url=$('#syncUrl').value.trim();DB.settings.sync.code=$('#syncCode').value.trim();if(!syncReady())return toast('ใส่ URL และรหัสซิงค์ก่อน');save();try{const got=await cloudPull();toast(got?'ดึงข้อมูลล่าสุดแล้ว ✓':'ยังไม่มีข้อมูลบนคลาวด์')}catch(e){setSyncDot('err');toast(e.message)}};
 $('#testKey').onclick=async()=>{$('#saveSet').onclick();const btn=$('#testKey');btn.textContent='กำลังทดสอบ...';try{await testProvider();toast('เชื่อมต่อสำเร็จ ✓')}catch(e){let m=e.message;if(e instanceof TypeError||/Failed to fetch|NetworkError|Load failed/i.test(m))m=provName()+' ถูกบล็อกจากเบราว์เซอร์ (CORS) — ใช้ Gemini แทน';toast('ผิดพลาด: '+m)}btn.textContent='ทดสอบการเชื่อมต่อ'};
 
 //==================== AI PROVIDERS ====================
@@ -492,7 +507,7 @@ function cancelRead(id){const ac=reading[id];if(ac)ac.abort();else{CO().records=
 async function readOnePage(pg,suffix){
  const ac=new AbortController();const rec={id:uid(),status:'reading',type:'expense',thumb:pg.isPdf?'':pg.dataUrl,createdAt:Date.now(),_pg:suffix||''};
  reading[rec.id]=ac;CO().records.unshift(rec);save();rerender();
- try{const data=await aiExtract(pg,ac.signal);Object.assign(rec,data,{status:'done'});if(suffix)rec.note=((rec.note||'')+' '+suffix.trim()).trim()}
+ try{const data=await aiExtract(pg,ac.signal);Object.assign(rec,data,{status:'done',_updatedAt:Date.now()});if(suffix)rec.note=((rec.note||'')+' '+suffix.trim()).trim()}
  catch(err){if(err.name==='AbortError'){CO().records=CO().records.filter(x=>x.id!==rec.id)}else{rec.status='error';rec.error=err.message;toast('อ่านไม่สำเร็จ: '+err.message)}}
  delete reading[rec.id];save();rerender();refreshBadge()}
 async function handleFile(file){
@@ -577,9 +592,9 @@ function openRec(id){const r=CO().records.find(x=>x.id===id);if(!r)return;
   <div class="grid2" style="margin-top:10px"><button class="btn line sm" id="e_close" style="width:100%">ปิด</button><button class="btn line sm" id="e_del" style="width:100%;color:var(--red)">ลบเอกสาร</button></div>`;
  $('#mask').classList.add('on');let ct=r.type||'expense';
  if(F('inout')){$('#t_exp').onclick=()=>{ct='expense';$('#t_exp').classList.add('on');$('#t_inc').classList.remove('on')};$('#t_inc').onclick=()=>{ct='income';$('#t_inc').classList.add('on');$('#t_exp').classList.remove('on')}}
- $('#e_save').onclick=()=>{r.vendor=$('#e_vendor').value;r.taxId=$('#e_taxId').value;r.invoiceNumber=$('#e_inv').value;r.date=$('#e_date').value;r.month=(r.date||'').slice(0,7)||r.month;r.category=$('#e_cat').value;r.subtotal=+$('#e_sub').value||0;r.vat=+$('#e_vat').value||0;r.total=+$('#e_total').value||0;r.type=F('inout')?ct:(r.category==='income'?'income':'expense');r.status='done';save();closeSheet();renderDocs();if($('#pgHome').classList.contains('on'))renderHome();refreshBadge();toast('บันทึกแล้ว ✓')};
+ $('#e_save').onclick=()=>{r.vendor=$('#e_vendor').value;r.taxId=$('#e_taxId').value;r.invoiceNumber=$('#e_inv').value;r.date=$('#e_date').value;r.month=(r.date||'').slice(0,7)||r.month;r.category=$('#e_cat').value;r.subtotal=+$('#e_sub').value||0;r.vat=+$('#e_vat').value||0;r.total=+$('#e_total').value||0;r.type=F('inout')?ct:(r.category==='income'?'income':'expense');r.status='done';r._updatedAt=Date.now();save();closeSheet();renderDocs();if($('#pgHome').classList.contains('on'))renderHome();refreshBadge();toast('บันทึกแล้ว ✓')};
  $('#e_close').onclick=closeSheet;
- $('#e_del').onclick=()=>{if(confirm('ลบเอกสารนี้?')){CO().records=CO().records.filter(x=>x.id!==id);save();closeSheet();renderDocs();renderHome();refreshBadge()}}}
+ $('#e_del').onclick=()=>{if(confirm('ลบเอกสารนี้?')){tombstone('rec',id);CO().records=CO().records.filter(x=>x.id!==id);save();closeSheet();renderDocs();renderHome();refreshBadge()}}}
 function closeSheet(){$('#mask').classList.remove('on');$('#sheet').innerHTML=''}
 $('#mask').onclick=e=>{if(e.target===$('#mask'))closeSheet()};
 $('#addManual').onclick=()=>{const r={id:uid(),status:'done',type:'expense',vendor:'',taxId:'',invoiceNumber:'',date:new Date().toISOString().slice(0,10),month:new Date().toISOString().slice(0,7),subtotal:0,vat:0,total:0,category:'other',lineItems:[],createdAt:Date.now()};CO().records.unshift(r);save();openRec(r.id)};
@@ -621,6 +636,41 @@ $('#impData').onclick=()=>$('#impFile').click();
 $('#impFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d.records){DB=migrate(d);save();loadSet();renderDocs();renderHome();refreshBadge();toast('กู้คืนสำเร็จ ✓')}else toast('ไฟล์ไม่ถูกต้อง')}catch(err){toast('อ่านไฟล์ไม่ได้')}};r.readAsText(f);e.target.value=''};
 $('#clrData').onclick=()=>{if(confirm('ล้างข้อมูลทั้งหมด (ทุกบริษัท)? กู้คืนไม่ได้')){const keep=DB.settings;DB=def();DB.settings=keep;DB.activeCompany=DB.companies[0].id;save();loadSet();renderDocs();renderHome();refreshBadge();toast('ล้างข้อมูลแล้ว')}};
 
+//==================== CLOUD SYNC (เข้ารหัสก่อนอัปโหลด) ====================
+let syncTimer,syncBusy=false;
+function syncCfg(){return DB.settings.sync||{}}
+function syncReady(){const s=syncCfg();return!!(s.url&&s.code)}
+function cloudURL(){const s=syncCfg();const base=s.url.replace(/\/+$/,'');const path=encodeURIComponent((s.code||'').trim()).replace(/[.#$\[\]]/g,'_');return base+'/acctai/'+path+'.json'}
+function setSyncDot(state){const d=$('#syncDot');if(!d)return;d.style.background=state==='ok'?'var(--green)':state==='err'?'var(--red)':state==='busy'?'var(--amber)':'var(--ink3)';$('#syncStat').textContent=state==='ok'?'ซิงค์ล่าสุดสำเร็จ':state==='err'?'ซิงค์มีปัญหา':state==='busy'?'กำลังซิงค์…':syncReady()?'พร้อมซิงค์':'ยังไม่ตั้งค่า'}
+// --- AES-GCM key จากรหัสซิงค์ ---
+async function deriveKey(code,salt){const enc=new TextEncoder();const base=await crypto.subtle.importKey('raw',enc.encode(code),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:1e5,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+const b64e=buf=>btoa(String.fromCharCode(...new Uint8Array(buf)));
+const b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function encJSON(obj,code){const iv=crypto.getRandomValues(new Uint8Array(12)),salt=crypto.getRandomValues(new Uint8Array(16));const key=await deriveKey(code,salt);const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(JSON.stringify(obj)));return{v:1,iv:b64e(iv),salt:b64e(salt),ct:b64e(ct)}}
+async function decJSON(pk,code){const key=await deriveKey(code,b64d(pk.salt));const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(pk.iv)},key,b64d(pk.ct));return JSON.parse(new TextDecoder().decode(pt))}
+// --- snapshot (ตัดเอกสารที่ยังอ่านไม่เสร็จออก) ---
+function snapshot(){const d=JSON.parse(JSON.stringify({companies:DB.companies,activeCompany:DB.activeCompany,settings:DB.settings,tomb:DB.tomb||{},_updatedAt:DB._updatedAt||0}));d.companies.forEach(c=>{c.records=(c.records||[]).filter(r=>r.status!=='reading')});return d}
+async function cloudPush(){if(!syncReady())return;setSyncDot('busy');const snap=snapshot();const pk=await encJSON(snap,syncCfg().code.trim());pk._updatedAt=snap._updatedAt;const r=await fetch(cloudURL(),{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(pk)});if(!r.ok)throw new Error('อัปโหลดไม่สำเร็จ ('+r.status+')')}
+function schedulePush(){if(!syncReady()||!syncCfg().auto)return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>{cloudPush().then(()=>setSyncDot('ok')).catch(()=>setSyncDot('err'))},1500)}
+async function cloudPull(){if(!syncReady())throw new Error('ยังไม่ตั้งค่าซิงค์');setSyncDot('busy');const r=await fetch(cloudURL(),{cache:'no-store'});if(!r.ok)throw new Error('ดึงข้อมูลไม่สำเร็จ ('+r.status+')');const pk=await r.json();if(!pk||!pk.ct){setSyncDot('ok');return false}let remote;try{remote=await decJSON(pk,syncCfg().code.trim())}catch(e){setSyncDot('err');throw new Error('รหัสซิงค์ไม่ตรง (ถอดรหัสไม่ได้)')}mergeRemote(remote);localStorage.setItem(LS,JSON.stringify(DB));loadSet();renderHome();renderDocs();refreshBadge();setSyncDot('ok');return true}
+function mergeTomb(a,b){const o=Object.assign({},a||{});for(const k in(b||{}))o[k]=Math.max(o[k]||0,b[k]);return o}
+function mergeRemote(remote){const tomb=mergeTomb(DB.tomb,remote.tomb);const map={};
+ const reg=c=>{if(!map[c.id])map[c.id]={id:c.id,name:c.name,_updatedAt:c._updatedAt||0,records:{}};else if((c._updatedAt||0)>(map[c.id]._updatedAt||0)){map[c.id].name=c.name;map[c.id]._updatedAt=c._updatedAt||0}};
+ (DB.companies||[]).forEach(reg);(remote.companies||[]).forEach(reg);
+ const addRecs=list=>(list||[]).forEach(c=>{const m=map[c.id];if(!m)return;(c.records||[]).forEach(r=>{if(!r||!r.id)return;const ex=m.records[r.id];if(!ex||(r._updatedAt||r.createdAt||0)>(ex._updatedAt||ex.createdAt||0))m.records[r.id]=r})});
+ addRecs(DB.companies);addRecs(remote.companies);
+ let companies=Object.values(map).filter(m=>!tomb['co:'+m.id]).map(m=>({id:m.id,name:m.name,_updatedAt:m._updatedAt,records:Object.values(m.records).filter(r=>r.status!=='reading'&&!tomb['rec:'+r.id])}));
+ if(!companies.length)companies=[{id:uid(),name:'บริษัทของฉัน',records:[]}];
+ DB.companies=companies;DB.tomb=tomb;
+ if((remote._updatedAt||0)>(DB._updatedAt||0)&&remote.settings){const localSync=DB.settings.sync;DB.settings=remote.settings;DB.settings.sync=localSync}
+ DB._updatedAt=Math.max(DB._updatedAt||0,remote._updatedAt||0);
+ if(!DB.activeCompany||!DB.companies.some(c=>c.id===DB.activeCompany))DB.activeCompany=DB.companies[0].id}
+function tombstone(kind,id){DB.tomb=DB.tomb||{};DB.tomb[kind+':'+id]=Date.now()}
+// ดึงข้อมูลตอนเปิดแอป/กลับมาที่แท็บ (ถ้าเปิดซิงค์อัตโนมัติ)
+async function autoPull(){if(syncReady()&&syncCfg().auto&&!syncBusy){syncBusy=true;try{await cloudPull();await cloudPush();setSyncDot('ok')}catch(e){}syncBusy=false}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)autoPull()});
+window.addEventListener('online',autoPull);
+
 //==================== PIN ====================
 let pinBuf='',pinMode='unlock',pinFirst='';
 function buildPad(){const pad=$('#kpad');pad.innerHTML='';['1','2','3','4','5','6','7','8','9','','0','⌫'].forEach(d=>{const b=document.createElement('button');b.textContent=d;if(d==='')b.style.visibility='hidden';b.onclick=()=>onPin(d);pad.appendChild(b)})}
@@ -630,7 +680,7 @@ function setupPin(){pinMode='set';pinFirst='';pinBuf='';$('#lock b').textContent
 function lockApp(){if(F('pin')&&DB.settings.pin){pinMode='unlock';pinBuf='';$('#lock b').textContent='ใส่รหัส PIN';buildPad();drawDots();$('#lock').classList.add('on')}}
 
 //==================== INIT ====================
-loadSet();renderHome();renderDocs();refreshBadge();lockApp();
+loadSet();renderHome();renderDocs();refreshBadge();lockApp();autoPull();
 </script>
 </body>
 </html>
