@@ -183,6 +183,155 @@ hr.sp{border:0;border-top:1px solid var(--line);margin:12px 0}
 .kpad{display:grid;grid-template-columns:repeat(3,74px);gap:14px}
 .kpad button{height:74px;border-radius:50%;background:var(--card);border:1px solid var(--line);font-size:25px;font-weight:600}
 .kpad button:active{background:var(--soft)}
+
+/* ===== RESPONSIVE: DESKTOP (≥768px) ===== */
+@media(min-width:768px){
+  .app{max-width:100%;padding-bottom:20px;padding-top:0;display:flex;flex-direction:column}
+
+  /* Top bar stays sticky but restyled */
+  .bar{position:sticky;top:0;padding:calc(env(safe-area-inset-top) + 14px) 24px 14px;border-radius:0 0 16px 16px;z-index:35}
+  .bar h1{font-size:19px;gap:10px}
+  .bar p{font-size:11.5px;margin-top:3px}
+
+  /* Page containers */
+  #pgHome,#pgDocs,#pgSum,#pgAudit,#pgSettings{padding-bottom:0}
+
+  /* Hide bottom navigation on desktop */
+  .nav{display:none}
+
+  /* Hide FAB on desktop - users can scan from docs page */
+  .fab{display:none}
+
+  /* Main content area with proper margins */
+  .hero{margin:18px 24px 0;max-width:700px}
+  .pad{padding:0 24px}
+
+  /* Quick actions in 3 columns on desktop */
+  .qa{gap:12px;margin:18px 24px 0;grid-template-columns:1fr 1fr 1fr}
+  .qa button{padding:16px 8px;font-size:13px}
+
+  /* Chips section */
+  .chips{padding:2px 24px;margin-top:6px}
+
+  /* Wider card layouts */
+  .card{padding:18px;margin-bottom:14px}
+  .rec{padding:15px;margin-bottom:12px}
+
+  /* KPI grid 4 columns on desktop */
+  .kpi{grid-template-columns:repeat(4,1fr);gap:12px}
+  .kpi .b2{padding:16px}
+  .kpi .b2 .lab{font-size:13px}
+  .kpi .b2 .v{font-size:24px}
+
+  /* Record list - 2 column grid on desktop */
+  #docList{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:1000px}
+  .rec{margin-bottom:0}
+
+  /* Trend chart taller on desktop */
+  .trend{height:160px;margin-top:18px}
+
+  /* Search bar wider */
+  .search{margin:0 24px 14px;max-width:700px}
+
+  /* Settings page - wider layout */
+  #pgSet .pad{max-width:900px;margin:0 auto;padding-left:24px;padding-right:24px}
+  .grid2{grid-template-columns:1fr 1fr}
+
+  /* Modal/Sheet positioning for desktop */
+  .sheet{max-width:600px;border-radius:18px;max-height:90vh}
+  .mask{justify-content:center;align-items:center}
+
+  /* Font size increases for better readability */
+  body{font-size:16px}
+  h2.sec{font-size:18px;margin:20px 2px 14px}
+  .bar h1{font-size:20px;gap:11px}
+  .btn{padding:14px 18px;font-size:16px}
+  .btn.sm{padding:10px 14px;font-size:14px}
+  label.fl{font-size:13.5px}
+
+  /* Steps horizontal scroll wider on desktop */
+  .steps{gap:10px;padding:2px 24px 4px}
+
+  /* Drop zone larger */
+  .drop{padding:32px 20px;margin:0 24px 8px}
+
+  /* Section padding consistent */
+  h2.sec.pad{padding-left:24px;padding-right:24px}
+
+  /* Adjust hero font sizes */
+  .hero .lab{font-size:13.5px}
+  .hero .amt{font-size:42px}
+  .hero .delta{font-size:13.5px;padding:4px 12px}
+
+  /* Trend bars more space */
+  .tbar{width:80%}
+  .tcol{min-width:40px}
+
+  /* PIN pad larger on desktop */
+  .kpad{grid-template-columns:repeat(3,90px);gap:18px}
+  .kpad button{height:90px;font-size:28px}
+}
+
+/* ===== RESPONSIVE: LARGE DESKTOP (≥1200px) ===== */
+@media(min-width:1200px){
+  .hero{max-width:900px;padding:24px;margin:20px auto 0}
+  .hero .amt{font-size:48px}
+  .hero .lab{font-size:14px}
+
+  /* 3-column record grid on very large screens */
+  #docList{grid-template-columns:repeat(3,1fr);max-width:1400px}
+
+  /* Wider content areas */
+  .search{max-width:900px}
+  .qa{max-width:900px;margin:18px auto 0}
+
+  /* Settings page - use more width */
+  #pgSet .pad{max-width:1200px}
+
+  /* KPI 4 columns with more breathing room */
+  .kpi{gap:14px;max-width:900px;margin:0 auto 14px}
+  .kpi .b2{padding:18px}
+
+  /* Trend chart even larger */
+  .trend{height:180px;margin-top:20px}
+
+  /* Cards wider */
+  .card{max-width:900px}
+
+  /* Content centering on large screens */
+  .pad{padding:0 24px;max-width:1200px;margin:0 auto}
+
+  /* Chips wider */
+  .chips{max-width:900px;margin:6px auto 0}
+}
+
+/* ===== RESPONSIVE: TABLET LANDSCAPE (≥600px AND ≤767px) ===== */
+@media(min-width:600px) and (max-width:767px){
+  .app{max-width:100%;padding-bottom:90px}
+
+  /* Wider layout but keep bottom nav */
+  .pad{padding:0 20px}
+  .qa{grid-template-columns:1fr 1fr 1fr;gap:11px;margin:16px 20px 0}
+
+  /* 2-column record grid on tablet */
+  #docList{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .rec{margin-bottom:0}
+
+  /* KPI 3 columns on tablet */
+  .kpi{grid-template-columns:repeat(3,1fr);gap:11px}
+  .kpi .b2{padding:15px;font-size:13px}
+  .kpi .b2 .v{font-size:20px}
+
+  /* Hero slightly larger */
+  .hero{margin:16px 20px 0;padding:22px}
+  .hero .amt{font-size:38px}
+
+  /* Chips still horizontal scroll */
+  .chips{padding:2px 20px;margin-top:5px}
+
+  /* Adjust bar for tablet */
+  .bar h1{font-size:19px}
+}
 </style>
 </head>
 <body>
