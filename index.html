@@ -186,7 +186,7 @@ hr.sp{border:0;border-top:1px solid var(--line);margin:12px 0}
 
 /* ===== RESPONSIVE: DESKTOP (≥768px) ===== */
 @media(min-width:768px){
-  .app{max-width:100%;padding-bottom:20px;padding-top:0;display:flex;flex-direction:column}
+  .app{max-width:100%;padding-bottom:20px;padding-top:60px;display:flex;flex-direction:column}
 
   /* Top bar stays sticky but restyled */
   .bar{position:sticky;top:0;padding:calc(env(safe-area-inset-top) + 14px) 24px 14px;border-radius:0 0 16px 16px;z-index:35}
@@ -196,14 +196,14 @@ hr.sp{border:0;border-top:1px solid var(--line);margin:12px 0}
   /* Page containers */
   #pgHome,#pgDocs,#pgSum,#pgAudit,#pgSettings{padding-bottom:0}
 
-  /* Desktop navigation - horizontal menu below header */
-  .nav{position:sticky;top:60px;max-width:none;margin:0;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border:none;border-bottom:1px solid var(--line);padding:8px 24px;flex-direction:row;justify-content:flex-start;gap:24px;z-index:34;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-  body.dark .nav{background:rgba(29,32,39,.95)}
-  .nav button{flex:0 1 auto;padding:12px 0;font-size:13px;gap:6px;flex-direction:row;color:var(--ink2);border-bottom:2px solid transparent;transition:all .15s}
-  .nav button:hover{color:var(--ink);border-bottom-color:var(--brand)}
+  /* Desktop navigation - horizontal menu at top center */
+  .nav{position:fixed;top:0;left:0;right:0;max-width:none;width:100%;margin:0;background:color-mix(in srgb,var(--card) 98%,transparent);backdrop-filter:blur(12px);border:none;border-bottom:1px solid var(--line);padding:12px 0;flex-direction:row;justify-content:center;gap:0;z-index:45;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+  body.dark .nav{background:color-mix(in srgb,var(--card) 98%,transparent)}
+  .nav button{flex:0 1 auto;padding:10px 20px;font-size:13px;gap:8px;flex-direction:row;color:var(--ink2);border:none;border-bottom:3px solid transparent;transition:all .15s;font-weight:600;white-space:nowrap}
+  .nav button:hover{color:var(--ink)}
   .nav button.on{color:var(--brand);border-bottom-color:var(--brand)}
-  .nav button .i{font-size:18px;line-height:1}
-  .nav .badge{position:absolute;top:8px;right:auto;margin-left:2px}
+  .nav button .i{font-size:16px;line-height:1}
+  .nav .badge{position:absolute;top:6px;right:10px;font-size:10px}
 
   /* Hide FAB on desktop - users can scan from docs page */
   .fab{display:none}
