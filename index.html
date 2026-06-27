@@ -186,18 +186,21 @@ hr.sp{border:0;border-top:1px solid var(--line);margin:12px 0}
 
 /* ===== RESPONSIVE: DESKTOP (≥768px) ===== */
 @media(min-width:768px){
-  .app{max-width:100%;padding-bottom:20px;padding-top:60px;display:flex;flex-direction:column}
+  .app{max-width:100%;padding-bottom:20px;padding-top:0;display:flex;flex-direction:column}
 
-  /* Top bar stays sticky but restyled */
-  .bar{position:sticky;top:0;padding:calc(env(safe-area-inset-top) + 14px) 24px 14px;border-radius:0 0 16px 16px;z-index:35}
+  /* Desktop navigation - horizontal menu at top center */
+  .nav{position:fixed;top:0;left:0;right:0;max-width:none;width:100%;margin:0;background:color-mix(in srgb,var(--card) 98%,transparent);backdrop-filter:blur(12px);border:none;border-bottom:1px solid var(--line);padding:12px 0;flex-direction:row;justify-content:center;gap:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.06);height:50px}
+
+  /* Top bar stays sticky but positioned below nav */
+  .bar{position:sticky;top:50px;padding:calc(env(safe-area-inset-top) + 14px) 24px 14px;border-radius:0 0 16px 16px;z-index:35}
   .bar h1{font-size:19px;gap:10px}
   .bar p{font-size:11.5px;margin-top:3px}
 
-  /* Page containers */
-  #pgHome,#pgDocs,#pgSum,#pgAudit,#pgSettings{padding-bottom:0}
+  /* Page containers with proper margin from nav */
+  #pgHome,#pgDocs,#pgSum,#pgAudit,#pgSettings{padding-bottom:0;margin-top:50px}
 
-  /* Desktop navigation - horizontal menu at top center */
-  .nav{position:fixed;top:0;left:0;right:0;max-width:none;width:100%;margin:0;background:color-mix(in srgb,var(--card) 98%,transparent);backdrop-filter:blur(12px);border:none;border-bottom:1px solid var(--line);padding:12px 0;flex-direction:row;justify-content:center;gap:0;z-index:45;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+  /* Hide the first bar's margin top since we have fixed nav */
+  #pgHome .bar,#pgDocs .bar,#pgSum .bar,#pgAudit .bar,#pgSet .bar{margin-top:0}
   body.dark .nav{background:color-mix(in srgb,var(--card) 98%,transparent)}
   .nav button{flex:0 1 auto;padding:10px 20px;font-size:13px;gap:8px;flex-direction:row;color:var(--ink2);border:none;border-bottom:3px solid transparent;transition:all .15s;font-weight:600;white-space:nowrap}
   .nav button:hover{color:var(--ink)}
