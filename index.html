@@ -196,8 +196,14 @@ hr.sp{border:0;border-top:1px solid var(--line);margin:12px 0}
   /* Page containers */
   #pgHome,#pgDocs,#pgSum,#pgAudit,#pgSettings{padding-bottom:0}
 
-  /* Hide bottom navigation on desktop */
-  .nav{display:none}
+  /* Desktop navigation - horizontal menu below header */
+  .nav{position:sticky;top:60px;max-width:none;margin:0;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border:none;border-bottom:1px solid var(--line);padding:8px 24px;flex-direction:row;justify-content:flex-start;gap:24px;z-index:34;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+  body.dark .nav{background:rgba(29,32,39,.95)}
+  .nav button{flex:0 1 auto;padding:12px 0;font-size:13px;gap:6px;flex-direction:row;color:var(--ink2);border-bottom:2px solid transparent;transition:all .15s}
+  .nav button:hover{color:var(--ink);border-bottom-color:var(--brand)}
+  .nav button.on{color:var(--brand);border-bottom-color:var(--brand)}
+  .nav button .i{font-size:18px;line-height:1}
+  .nav .badge{position:absolute;top:8px;right:auto;margin-left:2px}
 
   /* Hide FAB on desktop - users can scan from docs page */
   .fab{display:none}
@@ -308,6 +314,9 @@ hr.sp{border:0;border-top:1px solid var(--line);margin:12px 0}
 /* ===== RESPONSIVE: TABLET LANDSCAPE (≥600px AND ≤767px) ===== */
 @media(min-width:600px) and (max-width:767px){
   .app{max-width:100%;padding-bottom:90px}
+
+  /* Keep bottom nav on tablet */
+  .nav{position:fixed;bottom:0;left:0;right:0;max-width:100%;flex-direction:row}
 
   /* Wider layout but keep bottom nav */
   .pad{padding:0 20px}
