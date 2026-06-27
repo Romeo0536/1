@@ -188,25 +188,21 @@ hr.sp{border:0;border-top:1px solid var(--line);margin:12px 0}
 @media(min-width:768px){
   .app{max-width:100%;padding-bottom:20px;padding-top:0;display:flex;flex-direction:column}
 
-  /* Desktop navigation - horizontal menu at top center */
-  .nav{position:fixed;top:0;left:0;right:0;max-width:none;width:100%;margin:0;background:color-mix(in srgb,var(--card) 98%,transparent);backdrop-filter:blur(12px);border:none;border-bottom:1px solid var(--line);padding:12px 0;flex-direction:row;justify-content:center;gap:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.06);height:50px}
+  /* Top bar + nav combined in one row */
+  .bar{position:sticky;top:0;padding:calc(env(safe-area-inset-top) + 11px) 24px 11px;border-radius:0;display:flex;align-items:center;justify-content:space-between;z-index:50;height:50px;flex-shrink:0}
+  .bar h1{font-size:18px;gap:8px;margin:0;flex:0 0 auto}
+  .bar p{display:none}
 
-  /* Top bar stays sticky but positioned below nav */
-  .bar{position:sticky;top:50px;padding:calc(env(safe-area-inset-top) + 14px) 24px 14px;border-radius:0 0 16px 16px;z-index:35}
-  .bar h1{font-size:19px;gap:10px}
-  .bar p{font-size:11.5px;margin-top:3px}
-
-  /* Page containers with proper margin from nav */
-  #pgHome,#pgDocs,#pgSum,#pgAudit,#pgSettings{padding-bottom:0;margin-top:50px}
-
-  /* Hide the first bar's margin top since we have fixed nav */
-  #pgHome .bar,#pgDocs .bar,#pgSum .bar,#pgAudit .bar,#pgSet .bar{margin-top:0}
-  body.dark .nav{background:color-mix(in srgb,var(--card) 98%,transparent)}
-  .nav button{flex:0 1 auto;padding:10px 20px;font-size:13px;gap:8px;flex-direction:row;color:var(--ink2);border:none;border-bottom:3px solid transparent;transition:all .15s;font-weight:600;white-space:nowrap}
+  /* Desktop navigation - in same row as header */
+  .nav{position:static;top:auto;left:auto;right:auto;max-width:none;width:auto;margin:0;background:none;backdrop-filter:none;border:none;border-bottom:none;padding:0;flex-direction:row;justify-content:flex-end;gap:2px;z-index:auto;box-shadow:none;height:auto}
+  .nav button{flex:0 0 auto;padding:8px 16px;font-size:12px;gap:6px;flex-direction:row;color:var(--ink2);border:none;border-bottom:none;transition:all .15s;font-weight:600;white-space:nowrap}
   .nav button:hover{color:var(--ink)}
-  .nav button.on{color:var(--brand);border-bottom-color:var(--brand)}
+  .nav button.on{color:var(--brand)}
   .nav button .i{font-size:16px;line-height:1}
-  .nav .badge{position:absolute;top:6px;right:10px;font-size:10px}
+  .nav .badge{position:absolute;top:4px;right:8px;font-size:9px}
+
+  /* Page containers */
+  #pgHome,#pgDocs,#pgSum,#pgAudit,#pgSettings{padding-bottom:0}
 
   /* Hide FAB on desktop - users can scan from docs page */
   .fab{display:none}
